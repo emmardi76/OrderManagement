@@ -26,7 +26,8 @@ namespace OrderManagementApp.Persistence.Configuration
 
             builder.HasOne(p => p.TaxType)    
                     .WithMany(p => p.Product)
-                    .HasForeignKey(p => p.TaxTypeId);
+                    .HasForeignKey(p => p.TaxTypeId)
+                     .OnDelete(DeleteBehavior.NoAction);
 
             builder.Property(p => p.UnitPrice)
                  .HasColumnType("decimal(18,2)");

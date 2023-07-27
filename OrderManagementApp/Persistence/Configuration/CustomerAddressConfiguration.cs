@@ -35,7 +35,8 @@ namespace OrderManagementApp.Persistence.Configuration
 
             builder.HasOne(p => p.Customer)
                 .WithMany(p => p.CustomerAddress)
-                .HasForeignKey(p => p.CustomerId);
+                .HasForeignKey(p => p.CustomerId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

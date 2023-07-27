@@ -17,7 +17,7 @@ namespace OrderManagementApp.Persistence.Configuration
             builder.Property(p => p.Id)
              .IsRequired();
             builder.Property(p => p.Date)
-                .HasColumnType("datatime(dd/mm/yyyy hh:mm:ss)");
+                .IsRequired(true);
             builder.Property(p => p.OrderNumber)
                 .HasMaxLength(10);
             builder.Property(p => p.Remarks)
@@ -31,11 +31,13 @@ namespace OrderManagementApp.Persistence.Configuration
 
             builder.HasOne(p => p.Customer)
                 .WithMany(p => p.Orders)
-                .HasForeignKey(p => p.CustomerId);
+                .HasForeignKey(p => p.CustomerId)
+                .OnDelete(DeleteBehavior.NoAction);
 
             builder.HasOne(p => p.CustomerAddress)
                 .WithMany(p => p.Orders)
-                .HasForeignKey(p => p.CustomerAddressId);
+                .HasForeignKey(p => p.CustomerAddressId)
+                .OnDelete(DeleteBehavior.NoAction);
 
             builder.HasKey(p => p.Id);
 

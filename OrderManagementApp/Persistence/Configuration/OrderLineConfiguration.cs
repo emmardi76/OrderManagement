@@ -33,15 +33,18 @@ namespace OrderManagementApp.Persistence.Configuration
 
             builder.HasOne(p => p.Order)
                 .WithMany(p => p.OrderLines)
-                .HasForeignKey(p => p.OrderId);
+                .HasForeignKey(p => p.OrderId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(p => p.Product)
                .WithMany(p => p.OrderLines)
-               .HasForeignKey(p => p.ProductId);
+               .HasForeignKey(p => p.ProductId)
+               .OnDelete(DeleteBehavior.NoAction);
 
             builder.HasOne(p => p.TaxType)
                .WithMany(p => p.OrderLines)
-               .HasForeignKey(p => p.TaxTypeId);
+               .HasForeignKey(p => p.TaxTypeId)
+               .OnDelete(DeleteBehavior.NoAction);
 
             builder.HasKey(p => p.Id);
 
