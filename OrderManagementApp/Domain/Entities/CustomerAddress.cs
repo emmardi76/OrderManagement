@@ -20,6 +20,6 @@ namespace OrderManagementApp.Domain.Entities
         public string? Country { get; set; }
 
         public Customer? Customer { get; set; }
-        public ICollection<Order>? Orders { get; set; }
+        public ICollection<Order>? Orders { get; init; } = new List<Order>();
     }
 }

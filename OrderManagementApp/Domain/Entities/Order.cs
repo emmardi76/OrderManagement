@@ -20,5 +20,6 @@ namespace OrderManagementApp.Domain.Entities
 
         public Customer? Customer { get; set; }
         public CustomerAddress? CustomerAddress { get; set; }
+        public ICollection<OrderLine>? OrderLines { get; init; } = new List<OrderLine>();
     }
 }

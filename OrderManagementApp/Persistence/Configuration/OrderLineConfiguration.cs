@@ -13,6 +13,37 @@ namespace OrderManagementApp.Persistence.Configuration
     {
         public void Configure(EntityTypeBuilder<OrderLine> builder)
         {
+            builder.ToTable("OrderLine");
+            builder.Property(p => p.Id)
+            .IsRequired();
+            builder.Property(p => p.Name)
+                 .HasMaxLength(200);
+            builder.Property(p => p.Quantity)
+                 .HasMaxLength(6);
+            builder.Property(p => p.TaxPercentage)
+                 .HasColumnType("decimal(18,2)");
+            builder.Property(p => p.UnitPrice)
+                 .HasColumnType("decimal(18,2)");
+            builder.Property(p => p.TotalWithoutTaxes)
+                 .HasColumnType("decimal(18,2)");
+            builder.Property(p => p.Total)
+                 .HasColumnType("decimal(18,2)");
+            builder.Property(p => p.TaxBase)
+                 .HasColumnType("decimal(18,2)");
+
+            builder.HasOne(p => p.Order)
+                .WithMany(p => p.OrderLines)
+                .HasForeignKey(p => p.OrderId);
+
+            builder.HasOne(p => p.Product)
+               .WithMany(p => p.OrderLines)
+               .HasForeignKey(p => p.ProductId);
+
+            builder.HasOne(p => p.TaxType)
+               .WithMany(p => p.OrderLines)
+               .HasForeignKey(p => p.TaxTypeId);
+
+            builder.HasKey(p => p.Id);
 
         }
     }
