@@ -1,6 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 using OrderManagementApp.Application.Adapters;
+using OrderManagementApp.Application.Services;
+using OrderManagementApp.Application.Services.ServiceInterfaces;
+using OrderManagementApp.Domain.Interfaces;
 using OrderManagementApp.Persistence;
+using OrderManagementApp.Persistence.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +15,9 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<OrderContext>(Options => Options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddAutoMapper(typeof(OrderMapper).Assembly);
+
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

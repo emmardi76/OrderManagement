@@ -10,10 +10,10 @@ namespace OrderManagementApp.Domain.Interfaces
     public interface ICustomerAddressRepository
     {
         ICollection<CustomerAddress> GetCustomerAddresses();
-        CustomerAddress GetCustomerAddressesByCustomerId(int customerId);
-        CustomerAddress CreateCustomerAddress(int customerId);
-        bool UpdateCustomerAddress(int customerId);
-        bool DeleteCustomerAddress(int customerId);
+        ICollection<CustomerAddress> GetCustomerAddressesByCustomerId(int customerId);
+        void CreateCustomerAddress(CustomerAddress customerAddress);
+        void UpdateCustomerAddress(CustomerAddress customerAddress);
+        void DeleteCustomerAddress(CustomerAddress customerAddress);
         bool Save();
     }
 }

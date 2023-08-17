@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-using OrderManagementApp.Domain.Entities;
+﻿using OrderManagementApp.Domain.Entities;
 using OrderManagementApp.Domain.Interfaces;
 
 namespace OrderManagementApp.Persistence.Repository
@@ -29,71 +28,31 @@ namespace OrderManagementApp.Persistence.Repository
             return false;
         }
 
-        public ICollection<User> GetUser()
+        public ICollection<User> GetUsers()
         {
             return _orderContext.Users.OrderBy(u => u.FirstName).ToList();
         }
 
-        public User GetUserById(int id)
+        public User? GetUserById(int id)
         {
-            var result = _orderContext.Users.FirstOrDefault(u => u.Id == id);
-            if (result != null)
-                return result;
-            else
-                return null;
+            return _orderContext.Users.FirstOrDefault(u => u.Id == id);           
         }
 
-        public User GetUserByName(string name)
+        public User? GetUserByName(string name)
         {
-           var result = _orderContext.Users.FirstOrDefault(u => u.FirstName == name);
-
-            if (result != null)
-                return result;
-            else
-                return null;
+           return _orderContext.Users.FirstOrDefault(u => u.FirstName == name);          
         }
 
-        public User LoginUser(string email, string password)//check it
+        public User? GetUserByEmail(string email)
         {
-            var user = _orderContext.Users.FirstOrDefault(u => u.Email.Equals(email, StringComparison.OrdinalIgnoreCase));// &&  (_orderContext.Users.FirstOrDefault(u => u.PasswordHash.Equals(password))
-           
-
-            if (user == null)
-            {
-                return null;
-            }
-
-            var passwordVerificationResult = new PasswordHasher<User?>().VerifyHashedPassword(null, user.PasswordHash, password);
-            switch (passwordVerificationResult)
-            {
-                case PasswordVerificationResult.Failed:
-                    Console.WriteLine("Password incorrect.");
-                    break;
-
-                case PasswordVerificationResult.Success:
-                    Console.WriteLine("Password ok.");
-                    break;
-
-                case PasswordVerificationResult.SuccessRehashNeeded:
-                    Console.WriteLine("Password ok but should be rehashed and updated.");
-                    break;
-
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-
-            return user;
+            return _orderContext.Users.FirstOrDefault(u => u.Email.Equals(email, StringComparison.OrdinalIgnoreCase));                
         }
 
-        public User RegisterUser(User user, string password)
+        public User RegisterUser(User user)
         {
-            var hashedPassword = new PasswordHasher<User?>().HashPassword(null, password);
-            user.PasswordHash = hashedPassword;
-
             _orderContext.Users.Add(user);
             Save();
-
-            return user;            
+            return user;
         }
 
         public bool Save()
