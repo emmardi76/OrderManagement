@@ -1,4 +1,6 @@
-﻿using OrderManagementApp.Domain.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using OrderManagementApp.Application.Dtos;
+using OrderManagementApp.Domain.Entities;
 using OrderManagementApp.Domain.Interfaces;
 
 namespace OrderManagementApp.Persistence.Repository
@@ -12,59 +14,74 @@ namespace OrderManagementApp.Persistence.Repository
             _orderContext = orderContext;
         }
 
-        public bool DeleteUser(int id)
+        public void DeleteUser(User user)
         {
-            _orderContext.Set<User>().Remove(GetUserById(id));
-            return true;
+            _orderContext.Set<User>().Remove(user);
         }
 
-        public bool ExistUser(string user)
+        public async Task<ICollection<User>> GetUsers(UserQueryDto? userQueryDto = null)
         {
-            if (_orderContext.Users.Any(u => u.FirstName == user))
+            var users = _orderContext.Users.AsQueryable<User>();
+
+            if (userQueryDto != null)
             {
-                return true;
+                if (userQueryDto.Id.HasValue)
+                {
+                    users = users.Where(u => u.Id == userQueryDto.Id.Value);
+                }
+
+                if (userQueryDto.FirstName is not null)
+                {
+                    users = users.Where(u => u.FirstName != null && u.FirstName.Contains(userQueryDto.FirstName));
+                }
+
+                if (userQueryDto.LastName is not null)
+                {
+                    users = users.Where(u => u.LastName != null && u.LastName.Contains(userQueryDto.LastName));
+                }
+
+                if (userQueryDto.PhoneNumber is not null)
+                {
+                    users = users.Where(u => u.PhoneNumber != null && u.PhoneNumber.Contains(userQueryDto.PhoneNumber));
+                }
+
+                if (userQueryDto.Email is not null)
+                {
+                    users = users.Where(u => u.Email != null && u.Email.Contains(userQueryDto.Email));
+                }
             }
-                
-            return false;
+
+            return await users.OrderBy(u => u.FirstName).ToListAsync();
         }
 
-        public ICollection<User> GetUsers()
+        public async Task<User?> GetUserById(int id)
         {
-            return _orderContext.Users.OrderBy(u => u.FirstName).ToList();
+            return await _orderContext.Users.FirstOrDefaultAsync(u => u.Id == id);           
         }
 
-        public User? GetUserById(int id)
+        public async Task<User?> GetUserByName(string name)
         {
-            return _orderContext.Users.FirstOrDefault(u => u.Id == id);           
+           return await _orderContext.Users.FirstOrDefaultAsync(u => u.FirstName == name);          
         }
 
-        public User? GetUserByName(string name)
+        public async Task<User?> GetUserByEmail(string email)
         {
-           return _orderContext.Users.FirstOrDefault(u => u.FirstName == name);          
+            return await _orderContext.Users.FirstOrDefaultAsync(u => u.Email == email);                
         }
 
-        public User? GetUserByEmail(string email)
-        {
-            return _orderContext.Users.FirstOrDefault(u => u.Email.Equals(email, StringComparison.OrdinalIgnoreCase));                
-        }
-
-        public User RegisterUser(User user)
+        public void RegisterUser(User user)
         {
             _orderContext.Users.Add(user);
-            Save();
-            return user;
         }
 
-        public bool Save()
+        public async Task<bool> Save()
         {
-            return _orderContext.SaveChanges() >= 0 ? true : false;
+            return await _orderContext.SaveChangesAsync() >= 0 ? true : false;
         }
 
-        public bool UpdateUser(User user)
+        public void UpdateUser(User user)
         {
             _orderContext.Set<User>().Update(user);
-
-            return true;
         }       
     }
 }

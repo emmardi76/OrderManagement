@@ -1,17 +1,17 @@
-﻿using OrderManagementApp.Domain.Entities;
+﻿using OrderManagementApp.Application.Dtos;
+using OrderManagementApp.Domain.Entities;
 
 namespace OrderManagementApp.Domain.Interfaces
 {
     public interface IUserRepository
     {
-        ICollection<User> GetUsers();
-        User? GetUserById(int id);
-        User? GetUserByName(string name);
-        User? GetUserByEmail(string email);
-        bool ExistUser(string user);
-        User RegisterUser(User user);        
-        bool UpdateUser(User user);
-        bool DeleteUser(int id);
-        bool Save();
+        Task<ICollection<User>> GetUsers(UserQueryDto userQueryDto);
+        Task<User?> GetUserById(int id);
+        Task<User?> GetUserByName(string name);
+        Task<User?> GetUserByEmail(string email);
+        void RegisterUser(User user);        
+        void UpdateUser(User user);
+        void DeleteUser(User user);
+        Task<bool> Save();
     }
 }

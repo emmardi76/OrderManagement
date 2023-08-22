@@ -1,45 +1,51 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
 using OrderManagementApp.Application.Dtos;
 using OrderManagementApp.Application.Services.ServiceInterfaces;
 using OrderManagementApp.Domain.Entities;
 using OrderManagementApp.Domain.Interfaces;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace OrderManagementApp.Application.Services
 {
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
-        private readonly IMapper _mapper;       
+        private readonly IMapper _mapper;
+        private readonly string keyValue;
+        private readonly string issuer;
+        private readonly int expirationTime;
 
-        public UserService(IUserRepository userRepository, IMapper mapper)
+        public UserService(IUserRepository userRepository, IMapper mapper, IConfiguration config)
         {
             _userRepository = userRepository;
-            _mapper = mapper;            
+            _mapper = mapper;
+            keyValue = config.GetSection("JWT_KEY").GetSection("key").Value.ToString();
+            issuer = config.GetSection("JWT_KEY").GetSection("issuer").Value.ToString();
+            expirationTime = Int32.Parse(config.GetSection("JWT_KEY").GetSection("ExpirationTime").Value);
         }
 
-        public bool ExistUser(string user)
+        public async Task<bool> ExistUser(string firstName, string lastName)
         {
-            _userRepository.ExistUser(user);
-            return true;
+            var users = await _userRepository.GetUsers(new UserQueryDto { FirstName = firstName, LastName = lastName });
+
+            return users.Any();
         }
 
-        public ICollection<UserDto> GetUsers()
+
+        public async Task<ICollection<UserDto>> GetUsers(UserQueryDto userQueryDto)
         {
-            var ListUsers =  _userRepository.GetUsers();
+            var ListUsers = await _userRepository.GetUsers(userQueryDto);
 
-            var ListUsersDto = new List<UserDto>();
-
-            foreach (var List in ListUsers)
-            {
-                ListUsersDto.Add(_mapper.Map<UserDto>(List));
-            }
-            return ListUsersDto;
+            return _mapper.Map<List<UserDto>>(ListUsers);
         }
 
-        public UserDto? GetUserById(int id)
+        public async Task<UserDto?> GetUserById(int id)
         {
-            var itemUser = _userRepository.GetUserById(id);
+            var itemUser = await _userRepository.GetUserById(id);
 
             if (itemUser == null)
             {
@@ -51,9 +57,9 @@ namespace OrderManagementApp.Application.Services
             return itemUserDto;
         }
 
-        public UserDto? GetUserByEmail(string email)
+        public async Task<UserDto?> GetUserByEmail(string email)
         { 
-            var itemUser = (_userRepository.GetUserByEmail(email));
+            var itemUser = (await _userRepository.GetUserByEmail(email));
 
             if (itemUser == null)
             {
@@ -65,10 +71,10 @@ namespace OrderManagementApp.Application.Services
             return itemUserDto;
         }
 
-        public UserDto? LoginUser(string email, string password)
+        public async Task<UserAuthDto?> LoginUser(string email, string password)
         {
-            var user = _userRepository.GetUserByEmail(email);
-
+            var user = await _userRepository.GetUserByEmail(email);
+            UserAuthDto userAuthDto = new UserAuthDto(); //Check it asing all values of UserDto to userAuthDto
 
             if (user == null)
             {
@@ -84,6 +90,8 @@ namespace OrderManagementApp.Application.Services
 
                 case PasswordVerificationResult.Success:
                     Console.WriteLine("Password ok.");
+                    _mapper.Map(user, userAuthDto);                    
+                    userAuthDto.Token = GetJWT(user.Email);
                     break;
 
                 case PasswordVerificationResult.SuccessRehashNeeded:
@@ -94,12 +102,12 @@ namespace OrderManagementApp.Application.Services
                     return null;
             }
 
-            return _mapper.Map<UserDto>(user);
+            return userAuthDto;
         }
 
-        public UserDto RegisterUser(UserDto userDto, string password)
+        public async Task<UserDto> RegisterUser(UserDto userDto, string password)
         {
-            var itemUser = _userRepository.GetUserByEmail(userDto.Email);
+            var itemUser = await _userRepository.GetUserByEmail(userDto.Email);
 
             if (itemUser != null)
             {
@@ -110,35 +118,56 @@ namespace OrderManagementApp.Application.Services
             var hashedPassword = new PasswordHasher<User>().HashPassword(null, password);
             user.PasswordHash = hashedPassword;
             _userRepository.RegisterUser(user);
+            await _userRepository.Save();
 
             return _mapper.Map<UserDto>(user);
         }
 
-        public bool UpdateUser(User user)
+        public async Task<UserDto> UpdateUser(UserDto userDto)
         {
-            if (_userRepository.UpdateUser(user))
+            var user = await _userRepository.GetUserById(userDto.Id);
+            if (user is null) 
             {
-                _userRepository.Save();
-                return true;
+                throw new InvalidOperationException($"The user with id {userDto.Id} does not exist.");
             }
+            _mapper.Map(userDto, user);
+            await _userRepository.Save();
 
-            return false;
+            return _mapper.Map<UserDto>(user);
         }
 
-        public bool DeleteUser(int id)
+        public async Task DeleteUser(int id)
         {
-            if (_userRepository.DeleteUser(id))
+            var user = await _userRepository.GetUserById(id);
+            if (user == null) 
             {
-                _userRepository.Save();
-                return true;
+                throw new InvalidOperationException($"The user with id {id} does not exist.");
             }
-
-            return false;
+            _userRepository.DeleteUser(user);
+            await _userRepository.Save();
         }
 
-        public bool Save()
+        private string GetJWT(string email)
         {
-            return _userRepository.Save();
+            var jwtKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(keyValue));
+            var secureId = new SigningCredentials(jwtKey, SecurityAlgorithms.HmacSha256);
+
+            var claims = new[]
+            {
+                new  Claim(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sub, email),
+                new  Claim(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            };
+
+            var tokenBody = new JwtSecurityToken(
+                issuer: issuer,
+                audience: issuer,
+                claims,
+                expires: DateTime.Now.AddMinutes(expirationTime),
+                signingCredentials: secureId);
+
+            var token = new JwtSecurityTokenHandler().WriteToken(tokenBody);
+
+            return token;
         }
     }
 }

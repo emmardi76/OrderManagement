@@ -8,7 +8,7 @@ using OrderManagementApp.Persistence;
 
 #nullable disable
 
-namespace OrderManagementApp.Migrations
+namespace OrderManagementApp.Persistence.Migrations
 {
     [DbContext(typeof(OrderContext))]
     partial class OrderContextModelSnapshot : ModelSnapshot

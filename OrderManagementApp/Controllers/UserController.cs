@@ -6,6 +6,9 @@ using OrderManagementApp.Domain.Entities;
 
 namespace OrderManagementApp.Controllers
 {
+    [Authorize]
+    [ApiController]
+    [Route("[controller]")]
     public class UserController: Controller
     {
         private readonly IUserService _userService;       
@@ -17,44 +20,43 @@ namespace OrderManagementApp.Controllers
 
         [AllowAnonymous]
         [HttpPost("RegisterUser")]
-        public IActionResult RegisterUser(UserDto userDto, string password)
+        public async Task<IActionResult> RegisterUser(UserDto userDto, string password)
         {
-            return Ok(_userService.RegisterUser(userDto, password));
+            return Ok(await _userService.RegisterUser(userDto, password));
         }
 
         [AllowAnonymous]
         [HttpPost("LoginUser")]
-        public IActionResult LoginUser(UserLoginDto userLoginDto)
+        public async Task<IActionResult> LoginUser(UserLoginDto userLoginDto)
         {
-           var user = _userService.LoginUser(userLoginDto.Email, userLoginDto.Password);
+           var user = await _userService.LoginUser(userLoginDto.Email, userLoginDto.Password);          
 
             if (user == null)
             {
                 return Unauthorized();
             }
 
-            return Ok();
+            return Ok(user);
         }
 
         [AllowAnonymous]
-        [HttpGet("{user:string}", Name = "ExistUser")]
-        public IActionResult ExistUser(string user)
+        [HttpGet("existUser", Name = "ExistUser")]
+        public async Task<IActionResult> ExistUser(string firstName, string lastName)
         { 
-            return Ok(_userService.ExistUser(user));
+            return Ok(await _userService.ExistUser(firstName, lastName));
         }
-
-        [AllowAnonymous]
+        
         [HttpGet]
-        public IActionResult GetUsers()
+        public async Task<IActionResult> GetUsers([FromQuery] UserQueryDto userQueryDto)
         {
-            return Ok(_userService.GetUsers());
+            return Ok(await _userService.GetUsers(userQueryDto));
         }
 
         [AllowAnonymous]
         [HttpGet("{id:int}", Name = "GetUserById")]
-        public IActionResult GetUserById(int id) // Check if must return a userDto or user and do the conversion in service or controller
+        public async Task<IActionResult> GetUserById(int id) // Check if must return a userDto or user and do the conversion in service or controller
         { 
-            var itemUser = _userService.GetUserById(id);
+            var itemUser = await _userService.GetUserById(id);
 
             if (itemUser == null)
             {
@@ -65,10 +67,10 @@ namespace OrderManagementApp.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet]
-        public IActionResult GetUserByEmail(string email)
+        [HttpGet("getByEmail", Name = "GetUserByEmail")]
+        public async Task<IActionResult> GetUserByEmail(string email)
         {
-            var itemUser =  _userService.GetUserByEmail(email);
+            var itemUser = await _userService.GetUserByEmail(email);
 
             if (itemUser == null)
             {
@@ -79,45 +81,20 @@ namespace OrderManagementApp.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost("{user:User}", Name ="UpdateUser")]
-        public IActionResult UpdateUser(User user)
+        [HttpPut(Name ="UpdateUser")]
+        public async Task<IActionResult> UpdateUser([FromBody]UserDto user)
         {
-            var result = _userService.UpdateUser(user);
+            await _userService.UpdateUser(user);            
 
-            if (result == false)
-            { 
-                return BadRequest();
-            }
-
-            return Ok(result);
+            return Ok(user);
         }
 
         [AllowAnonymous]
-        [HttpPost("{id:int}", Name = "DeleteUser")]
-        public IActionResult DeleteUser(int id)
-        { 
-            var result = _userService.DeleteUser(id);
-
-            if (result == false)
-            {
-                return BadRequest();
-            }
-
-            return Ok(result);
-        }
-
-        [AllowAnonymous]
-        [HttpPost("Save")]
-        public IActionResult Save()
+        [HttpDelete("{id:int}", Name = "DeleteUser")]
+        public async Task<IActionResult> DeleteUser(int id)
         {
-            var result = _userService.Save();
-
-            if (result == false)
-            {
-                return BadRequest();
-            }
-
-            return Ok(result);
+            await _userService.DeleteUser(id);
+            return Ok();
         }
     }
 }

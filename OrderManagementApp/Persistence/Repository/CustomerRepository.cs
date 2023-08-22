@@ -33,7 +33,10 @@ namespace OrderManagementApp.Persistence.Repository
 
         public ICollection<CustomerAddress> GetCustomerAddressById(int id)
         {
-            return (ICollection<CustomerAddress>)_orderContext.Customers.OrderBy(c => c.CustomerAddress).Where(c => c.Id == id).ToList();
+            //return _orderContext.Customers.Where(c => c.Id == id).SelectMany(c => c.CustomerAddress!).ToList();
+
+            //var list = _orderContext.CustomerAddresses.Where(c => c.CustomerId == id).ToList() ?? new List<CustomerAddress>();
+            return _orderContext.CustomerAddresses.Where(c => c.CustomerId == id).ToList();
         }
 
         public Customer GetCustomerById(int id)

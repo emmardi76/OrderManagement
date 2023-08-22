@@ -9,7 +9,7 @@ using OrderManagementApp.Persistence;
 
 #nullable disable
 
-namespace OrderManagementApp.Migrations
+namespace OrderManagementApp.Persistence.Migrations
 {
     [DbContext(typeof(OrderContext))]
     [Migration("20230727115209_firstMigration")]
