@@ -3,11 +3,7 @@ using OrderManagementApp.Application.Dtos;
 using OrderManagementApp.Application.Services.ServiceInterfaces;
 using OrderManagementApp.Domain.Entities;
 using OrderManagementApp.Domain.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using OrderManagementApp.Persistence.Repository;
 
 namespace OrderManagementApp.Application.Services
 {
@@ -22,9 +18,9 @@ namespace OrderManagementApp.Application.Services
             _mapper = mapper;
         }
 
-        public CustomerDto CreateCustomer(CustomerDto customerDto)
+        public async Task<CustomerDto> CreateCustomer(CustomerDto customerDto)
         {           
-            var itemCustomer = _customerRepository.GetCustomerById(customerDto.Id);
+            var itemCustomer = await _customerRepository.GetCustomerById(customerDto.Id);
 
             if (itemCustomer != null)
             {
@@ -33,18 +29,25 @@ namespace OrderManagementApp.Application.Services
 
             var customer = _mapper.Map<Customer>(customerDto);
             _customerRepository.CreateCustomer(customer);
+            await _customerRepository.Save();
 
             return _mapper.Map<CustomerDto>(customer);
         }
 
-        public void DeleteCustomer(int id)
+        public async Task DeleteCustomer(int id)
         {
-            throw new NotImplementedException();
+            var customer = await _customerRepository.GetCustomerById(id);
+            if (customer == null)
+            {
+                throw new InvalidOperationException($"The customer with id {id} does not exist.");
+            }
+            _customerRepository.DeleteCustomerById(id);
+            await _customerRepository.Save();
         }
 
-        public ICollection<CustomerAddressDto> GetCustomerAddressById(int id)
+        public async Task<ICollection<CustomerAddressDto>> GetCustomerAddressById(int id)
         {
-            var ListCustomerAddress = _customerRepository.GetCustomerAddressById(id);
+            var ListCustomerAddress = await _customerRepository.GetCustomerAddressById(id);
 
             return _mapper.Map<ICollection<CustomerAddressDto>>(ListCustomerAddress);
             //var ListCustomerAddressDto = new List<CustomerAddressDto>();
@@ -62,9 +65,9 @@ namespace OrderManagementApp.Application.Services
             //return ListCustomerAddressDto;
         }
 
-        public CustomerDto GetCustomerById(int id)
+        public async Task<CustomerDto> GetCustomerById(int id)
         {
-            var itemCustomer = _customerRepository.GetCustomerById(id);
+            var itemCustomer = await _customerRepository.GetCustomerById(id);
 
             if (itemCustomer == null)
             {
@@ -74,14 +77,16 @@ namespace OrderManagementApp.Application.Services
             return _mapper.Map<CustomerDto>(itemCustomer);
         }
 
-        public ICollection<OrderDto> GetCustomerOrdersById(int id)
+        public async Task<ICollection<OrderDto>> GetCustomerOrdersById(int id)
         {
-            throw new NotImplementedException();
+            var ListCustomerOrder = await _customerRepository.GetCustomerOrdersById(id);
+
+            return _mapper.Map<ICollection<OrderDto>>(ListCustomerOrder);
         }
 
-        public ICollection<CustomerDto> GetCustomers()
+        public async Task<ICollection<CustomerDto>> GetCustomers(CustomerQueryDto customerQueryDto)
         {
-            var ListCustomers = _customerRepository.GetCustomers();
+            var ListCustomers = await _customerRepository.GetCustomers(customerQueryDto);
 
             var ListCustomersDto = new List<CustomerDto>();
 
@@ -91,16 +96,20 @@ namespace OrderManagementApp.Application.Services
             }
 
             return ListCustomersDto;
-        }
+        }       
 
-        public bool Save()
+        public async Task<CustomerDto> UpdateCustomer(CustomerDto customerDto)
         {
-            return _customerRepository.Save();
-        }
+            var customer = await _customerRepository.GetCustomerById(customerDto.Id); 
 
-        public bool UpdateCustomer(Customer customer)
-        {
-            throw new NotImplementedException();
+            if (customer == null)
+            {
+                throw new InvalidOperationException($"The customer with id {customerDto.Id} does not exist.");
+            }
+            _mapper.Map(customerDto, customer);
+            await _customerRepository.Save();
+
+            return _mapper.Map<CustomerDto>(customer);
         }
     }
 }

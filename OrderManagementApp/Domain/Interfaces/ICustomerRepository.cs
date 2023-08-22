@@ -1,4 +1,5 @@
-﻿using OrderManagementApp.Domain.Entities;
+﻿using OrderManagementApp.Application.Dtos;
+using OrderManagementApp.Domain.Entities;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,13 +11,13 @@ namespace OrderManagementApp.Domain.Interfaces
 {
     public interface ICustomerRepository
     {
-        ICollection<Customer> GetCustomers();
-        Customer GetCustomerById(int id);
+        Task<ICollection<Customer>> GetCustomers(CustomerQueryDto customerQueryDto);
+        Task<Customer> GetCustomerById(int id);
         Customer CreateCustomer(Customer customer);
-        bool UpdateCustomer(Customer customer);
-        bool DeleteCustomerById(int id);
-        bool Save();
-        ICollection<CustomerAddress> GetCustomerAddressById(int id);
-        ICollection<Order> GetCustomerOrdersById(int id);
+        void UpdateCustomer(Customer customer);
+        void DeleteCustomerById(int id);
+        Task<bool> Save();
+        Task<ICollection<CustomerAddress>> GetCustomerAddressById(int id);
+        Task<ICollection<Order>> GetCustomerOrdersById(int id);
     }
 }

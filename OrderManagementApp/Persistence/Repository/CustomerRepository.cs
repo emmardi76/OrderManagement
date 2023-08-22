@@ -1,11 +1,7 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.EntityFrameworkCore;
+using OrderManagementApp.Application.Dtos;
 using OrderManagementApp.Domain.Entities;
 using OrderManagementApp.Domain.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OrderManagementApp.Persistence.Repository
 {
@@ -24,24 +20,23 @@ namespace OrderManagementApp.Persistence.Repository
             return customer;
         }
 
-        public bool DeleteCustomerById(int id)
+        public async void DeleteCustomerById(int id)
         {
-            Customer customer = GetCustomerById(id);
-            _orderContext.Customers.Remove(customer);
-            return Save();
+            Customer customer =  await GetCustomerById(id);
+            _orderContext.Customers.Remove(customer);          
         }
 
-        public ICollection<CustomerAddress> GetCustomerAddressById(int id)
+        public async Task<ICollection<CustomerAddress>> GetCustomerAddressById(int id)
         {
             //return _orderContext.Customers.Where(c => c.Id == id).SelectMany(c => c.CustomerAddress!).ToList();
 
             //var list = _orderContext.CustomerAddresses.Where(c => c.CustomerId == id).ToList() ?? new List<CustomerAddress>();
-            return _orderContext.CustomerAddresses.Where(c => c.CustomerId == id).ToList();
+            return await _orderContext.CustomerAddresses.Where(c => c.CustomerId == id).ToListAsync();
         }
 
-        public Customer GetCustomerById(int id)
+        public async Task<Customer> GetCustomerById(int id)
         {           
-            var customer = _orderContext.Customers.FirstOrDefault(c => c.Id == id);
+            var customer = await _orderContext.Customers.FirstOrDefaultAsync(c => c.Id == id);
             if (customer == null)
             {
                 return null;
@@ -49,25 +44,54 @@ namespace OrderManagementApp.Persistence.Repository
             return customer;
         }
 
-        public ICollection<Order> GetCustomerOrdersById(int id)
+        public async Task<ICollection<Order>> GetCustomerOrdersById(int id)
         {
-            return (ICollection<Order>)_orderContext.Customers.OrderBy(c => c.Orders).Where(c => c.Id == id).ToList();
+            return (ICollection<Order>) await _orderContext.Customers.OrderBy(c => c.Orders).Where(c => c.Id == id).ToListAsync();
         }
 
-        public ICollection<Customer> GetCustomers()
+        public async Task<ICollection<Customer>> GetCustomers(CustomerQueryDto? customerQueryDto=null)
         {
-            return _orderContext.Customers.OrderBy(c => c.FirstName).ToList();
+            var customers = _orderContext.Customers.AsQueryable<Customer>();
+
+            if (customerQueryDto != null)
+            {
+                if (customerQueryDto.Id.HasValue)
+                {
+                    customers = customers.Where(c => c.Id == customerQueryDto.Id.Value);
+                }
+
+                if (customerQueryDto.FirstName is not null)
+                {
+                    customers = customers.Where(c => c.FirstName != null && c.FirstName.Contains(customerQueryDto.FirstName));
+                }
+
+                if (customerQueryDto.LastName is not null)
+                {
+                    customers = customers.Where(c => c.LastName != null && c.LastName.Contains(customerQueryDto.LastName));
+                }
+
+                if (customerQueryDto.PhoneNumber is not null)
+                {
+                    customers = customers.Where(c => c.PhoneNumber != null && c.PhoneNumber.Contains(customerQueryDto.PhoneNumber));
+                }
+
+                if (customerQueryDto.Email is not null)
+                {
+                    customers = customers.Where(c => c.Email != null && c.Email.Contains(customerQueryDto.Email));
+                }
+
+            }
+            return await customers.OrderBy(c => c.FirstName).ToListAsync();
         }
 
-        public bool Save()
+        public async Task<bool> Save()
         {
-            return _orderContext.SaveChanges() >=0 ? true: false;
+            return await _orderContext.SaveChangesAsync() >=0 ? true: false;
         }
 
-        public bool UpdateCustomer(Customer customer)
+        public void  UpdateCustomer(Customer customer)
         {
-            _orderContext.Customers.Update(customer);
-            return Save();
+            _orderContext.Customers.Update(customer);            
         }
     }
 }
