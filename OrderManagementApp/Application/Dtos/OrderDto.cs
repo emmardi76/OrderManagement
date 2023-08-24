@@ -17,9 +17,6 @@ namespace OrderManagementApp.Application.Dtos
         public string? Remarks { get; set; }
         public decimal TotalWithoutTaxes { get; set; }
         public decimal Total { get; set; }
-        public decimal TaxBase { get; set; }
-
-        public CustomerDto? Customer { get; set; }
-        public CustomerAddressDto? CustomerAddress { get; set; }
+        public decimal TaxBase { get; set; }        
     }
 }

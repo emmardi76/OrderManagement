@@ -13,9 +13,6 @@ namespace OrderManagementApp.Application.Dtos
         public string? Name { get; set; }
         public string? Description { get; set; }
         public int TaxTypeId { get; set; }
-        public decimal UnitPrice { get; set; }
-
-        
-        public ICollection<OrderLineDto> OrderLines { get; init; } = new List<OrderLineDto>();
+        public decimal UnitPrice { get; set; }           
     }
 }
