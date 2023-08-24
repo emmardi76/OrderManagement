@@ -1,10 +1,6 @@
-﻿using OrderManagementApp.Domain.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using OrderManagementApp.Domain.Entities;
 using OrderManagementApp.Domain.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OrderManagementApp.Persistence.Repository
 {
@@ -26,20 +22,20 @@ namespace OrderManagementApp.Persistence.Repository
             _orderContext.CustomerAddresses.Remove(customerAddress);           
         }
 
-        public ICollection<CustomerAddress> GetCustomerAddresses()
+        public async Task<ICollection<CustomerAddress>> GetCustomerAddresses()
         {
-            return _orderContext.CustomerAddresses.OrderBy(ca => ca.CustomerId).ToList();
+            return  await _orderContext.CustomerAddresses.OrderBy(ca => ca.CustomerId).ToListAsync();
         }
 
-        public ICollection<CustomerAddress> GetCustomerAddressesByCustomerId(int customerId)
+        public async Task<ICollection<CustomerAddress>> GetCustomerAddressesByCustomerId(int customerId)
         {
-            return _orderContext.CustomerAddresses.Where(ca => ca.CustomerId == customerId).ToList();           
+            return await  _orderContext.CustomerAddresses.Where(ca => ca.CustomerId == customerId).ToListAsync();           
             
         }
 
-        public bool Save()
+        public async Task<bool> Save()
         {
-            return _orderContext.SaveChanges() >= 0 ? true : false;
+            return await _orderContext.SaveChangesAsync() >= 0 ? true : false;
         }
 
         public void UpdateCustomerAddress(CustomerAddress customerAddress)

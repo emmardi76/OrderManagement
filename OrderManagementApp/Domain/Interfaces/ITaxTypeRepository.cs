@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore.Diagnostics;
+using OrderManagementApp.Application.Dtos;
 using OrderManagementApp.Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -10,14 +11,14 @@ namespace OrderManagementApp.Domain.Interfaces
 {
     public interface ITaxTypeRepository
     {
-        ICollection<TaxType> GetAll();
-        TaxType GetTaxTypeById(int id);
-        TaxType CreateTaxType(TaxType taxType);
-        bool UpdateTaxType(TaxType taxType);
-        bool DeleteTaxType(int id);
-        bool Save();
+        Task<ICollection<TaxType>> GetAll(TaxQueryDto taxQueryDto);
+        Task<TaxType> GetTaxTypeById(int id);
+        void CreateTaxType(TaxType taxType);
+        void UpdateTaxType(TaxType taxType);
+        void DeleteTaxType(int id);
+        Task<bool> Save();
 
-        ICollection<Product> GetAllProductsWithTaxType(int id);
-        ICollection<OrderLine> GetOrderLinesWithTaxType(int id);
+        Task<ICollection<Product>> GetAllProductsWithTaxType(int id);
+        Task<ICollection<OrderLine>> GetOrderLinesWithTaxType(int id);
     }
 }

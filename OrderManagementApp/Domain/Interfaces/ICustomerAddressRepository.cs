@@ -9,11 +9,11 @@ namespace OrderManagementApp.Domain.Interfaces
 {
     public interface ICustomerAddressRepository
     {
-        ICollection<CustomerAddress> GetCustomerAddresses();
-        ICollection<CustomerAddress> GetCustomerAddressesByCustomerId(int customerId);
+        Task<ICollection<CustomerAddress>> GetCustomerAddresses();
+        Task<ICollection<CustomerAddress>> GetCustomerAddressesByCustomerId(int customerId);
         void CreateCustomerAddress(CustomerAddress customerAddress);
         void UpdateCustomerAddress(CustomerAddress customerAddress);
         void DeleteCustomerAddress(CustomerAddress customerAddress);
-        bool Save();
+        Task<bool> Save();
     }
 }

@@ -19,8 +19,8 @@ namespace OrderManagementApp.Application.Dtos
         public string? City { get; set; }
         public string? Country { get; set; }
 
-        public CustomerDto? Customer { get; set; }
-        public ICollection<OrderDto>? Orders { get; init; } = new List<OrderDto>();
+        //public CustomerDto? Customer { get; set; }
+        //public ICollection<OrderDto>? Orders { get; init; } = new List<OrderDto>();
 
     }
 }

@@ -13,7 +13,7 @@ namespace OrderManagementApp.Application.Dtos
         public string? Name { get; set; }
         public int TaxPercentage { get; set; }
 
-        public ICollection<ProductDto>? Product { get; set; }
-        public ICollection<OrderLineDto>? OrderLines { get; init; } = new HashSet<OrderLineDto>();
+        //public ICollection<ProductDto>? Product { get; set; }
+        //public ICollection<OrderLineDto>? OrderLines { get; init; } = new HashSet<OrderLineDto>();
     }
 }

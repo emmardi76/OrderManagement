@@ -3,7 +3,6 @@ using OrderManagementApp.Application.Dtos;
 using OrderManagementApp.Application.Services.ServiceInterfaces;
 using OrderManagementApp.Domain.Entities;
 using OrderManagementApp.Domain.Interfaces;
-using OrderManagementApp.Persistence.Repository;
 
 namespace OrderManagementApp.Application.Services
 {

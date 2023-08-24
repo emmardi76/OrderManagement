@@ -1,5 +1,4 @@
 ﻿using OrderManagementApp.Application.Dtos;
-using OrderManagementApp.Domain.Entities;
 
 namespace OrderManagementApp.Application.Services.ServiceInterfaces
 {
