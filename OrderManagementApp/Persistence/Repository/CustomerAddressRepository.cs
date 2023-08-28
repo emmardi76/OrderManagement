@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using OrderManagementApp.Application.Dtos;
 using OrderManagementApp.Domain.Entities;
 using OrderManagementApp.Domain.Interfaces;
 
@@ -22,8 +23,27 @@ namespace OrderManagementApp.Persistence.Repository
             _orderContext.CustomerAddresses.Remove(customerAddress);           
         }
 
-        public async Task<ICollection<CustomerAddress>> GetCustomerAddresses()
+        public async Task<ICollection<CustomerAddress>> GetCustomerAddresses(CustomerAddressQueryDto? customerAddressQueryDto=null)
         {
+            var customerAdresses = _orderContext.CustomerAddresses.AsQueryable<CustomerAddress>();
+            if (customerAddressQueryDto != null)
+            {
+                if (customerAddressQueryDto.Id.HasValue)
+                {
+                    customerAdresses = customerAdresses.Where(ca => ca.Id == customerAddressQueryDto.Id.Value);
+                }
+
+                if (customerAddressQueryDto.CustomerId.HasValue)
+                {
+                    customerAdresses = customerAdresses.Where(ca => ca.CustomerId == customerAddressQueryDto.CustomerId.Value);
+                }
+
+                if (customerAddressQueryDto.Description is not null)
+                {
+                    customerAdresses = customerAdresses.Where(ca => ca.Description != null && ca.Description.Contains(customerAddressQueryDto.Description));
+                }
+            }
+
             return  await _orderContext.CustomerAddresses.OrderBy(ca => ca.CustomerId).ToListAsync();
         }
 

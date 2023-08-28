@@ -37,10 +37,17 @@ namespace OrderManagementApp.Application.Services
             await _customerAddressRepository.Save();
         }
 
-        public async  Task<ICollection<CustomerAddressDto>> GetCustomerAddresses()
+        public async  Task<ICollection<CustomerAddressDto>> GetCustomerAddresses(CustomerAddressQueryDto customerAddressQueryDto)
         {
-            var listCustomerAddress = await _customerAddressRepository.GetCustomerAddresses();
-            return _mapper.Map<ICollection<CustomerAddressDto>>(listCustomerAddress);
+            var listCustomerAddresses = await _customerAddressRepository.GetCustomerAddresses(customerAddressQueryDto);
+
+            var ListCustomerAddressesDto = new List<CustomerAddressDto>();
+
+            foreach (var List in listCustomerAddresses)
+            {
+                ListCustomerAddressesDto.Add(_mapper.Map<CustomerAddressDto>(List));
+            }
+            return _mapper.Map<ICollection<CustomerAddressDto>>(ListCustomerAddressesDto);
         }
 
         public async Task<ICollection<CustomerAddressDto>> GetCustomerAddressesByCustomerId(int customerId)
@@ -60,7 +67,7 @@ namespace OrderManagementApp.Application.Services
 
             var customerAddress = new CustomerAddress();
             _mapper.Map(customerAddressDto, customerAddress);
-            _customerAddressRepository.UpdateCustomerAddress(customerAddress);
+            //_customerAddressRepository.UpdateCustomerAddress(customerAddress);
             await _customerAddressRepository.Save();
         }
     }

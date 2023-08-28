@@ -18,15 +18,15 @@ namespace OrderManagementApp.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet("GetCustomersAddresses")]
-        public async Task<IActionResult> GetCustomerAddresses()
+        [HttpGet("GetCustomerAddresses")]
+        public async Task<IActionResult> GetCustomerAddresses([FromQuery] CustomerAddressQueryDto customerAddressQueryDto)
         {
-           var ListCustomerAddresses = await  _customerAddressService.GetCustomerAddresses();
+           var ListCustomerAddresses = await  _customerAddressService.GetCustomerAddresses(customerAddressQueryDto);
            return Ok(ListCustomerAddresses);
         }
 
         [AllowAnonymous]
-        [HttpGet("GetCustomersAddresses/{customerId}")]
+        [HttpGet("GetCustomerAddresses/{customerId}")]
         public async Task<IActionResult> GetCustomerAddressesByCustomerId(int customerId)
         {
             var ListCustomerAddresses = await _customerAddressService.GetCustomerAddressesByCustomerId(customerId);
@@ -36,19 +36,22 @@ namespace OrderManagementApp.Controllers
         [HttpPost(Name = "CreateCustomerAddress")]
         public async Task<IActionResult> CreateCustomer(CustomerAddressDto customerAddressDto)
         {
-           return (IActionResult)_customerAddressService.CreateCustomerAddress(customerAddressDto);
+           await _customerAddressService.CreateCustomerAddress(customerAddressDto);
+           return Ok();
         }
 
         [HttpPut(Name = "UpdateCustomerAddress")]
         public async Task<IActionResult> UpdateCustomerAddress(CustomerAddressDto customerAddressDto)
         {
-            return (IActionResult)_customerAddressService.UpdateCustomerAddress(customerAddressDto);
+            await _customerAddressService.UpdateCustomerAddress(customerAddressDto);
+            return Ok();
         }
        
         [HttpDelete(Name = "DeleteCustomerAddress")]
         public async Task<IActionResult> DeleteCustomerAddress(CustomerAddressDto customerAddressDto)
         {
-            return (IActionResult)_customerAddressService.DeleteCustomerAddress(customerAddressDto);
+            await _customerAddressService.DeleteCustomerAddress(customerAddressDto);
+            return Ok();
         }
     }
 }

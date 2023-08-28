@@ -1,4 +1,5 @@
-﻿using OrderManagementApp.Domain.Entities;
+﻿using OrderManagementApp.Application.Dtos;
+using OrderManagementApp.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace OrderManagementApp.Domain.Interfaces
 {
     public interface ICustomerAddressRepository
     {
-        Task<ICollection<CustomerAddress>> GetCustomerAddresses();
+        Task<ICollection<CustomerAddress>> GetCustomerAddresses(CustomerAddressQueryDto customerAddressQueryDto);
         Task<ICollection<CustomerAddress>> GetCustomerAddressesByCustomerId(int customerId);
         void CreateCustomerAddress(CustomerAddress customerAddress);
         void UpdateCustomerAddress(CustomerAddress customerAddress);

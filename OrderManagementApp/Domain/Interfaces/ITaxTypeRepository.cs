@@ -15,7 +15,7 @@ namespace OrderManagementApp.Domain.Interfaces
         Task<TaxType> GetTaxTypeById(int id);
         void CreateTaxType(TaxType taxType);
         void UpdateTaxType(TaxType taxType);
-        void DeleteTaxType(int id);
+        void DeleteTaxType(TaxType taxType);
         Task<bool> Save();
 
         Task<ICollection<Product>> GetAllProductsWithTaxType(int id);

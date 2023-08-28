@@ -19,10 +19,9 @@ namespace OrderManagementApp.Persistence.Repository
             _orderContext.TaxTypes.Add(taxType);
         }
 
-        public async void DeleteTaxType(int id)
+        public void DeleteTaxType(TaxType taxType)
         {
-            var tax = await GetTaxTypeById(id);
-            _orderContext.TaxTypes.Remove(tax);
+            _orderContext.TaxTypes.Remove(taxType);
         }
 
         public async Task<ICollection<TaxType>> GetAll(TaxQueryDto taxQueryDto)
@@ -71,14 +70,9 @@ namespace OrderManagementApp.Persistence.Repository
             return (ICollection<OrderLine>)orderlines;
         }
 
-        public async Task<TaxType> GetTaxTypeById(int id)
+        public async Task<TaxType?> GetTaxTypeById(int id)
         {
-            TaxType tax = await _orderContext.TaxTypes.FirstOrDefaultAsync(t => t.Id == id);
-            if (tax == null)
-            {
-                return null;
-            }
-            return tax;
+            return await _orderContext.TaxTypes.FirstOrDefaultAsync(t => t.Id == id);
         }
 
         public async Task<bool> Save()

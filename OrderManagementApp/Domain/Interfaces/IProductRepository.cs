@@ -1,4 +1,5 @@
-﻿using OrderManagementApp.Domain.Entities;
+﻿using OrderManagementApp.Application.Dtos;
+using OrderManagementApp.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,16 +10,14 @@ namespace OrderManagementApp.Domain.Interfaces
 {
     public interface IProductRepository
     {
-        ICollection<Product> GetProducts();
-        Product GetProductById(int id);
-        bool ExistProduct(int Id);
-        bool ExistProduct(string name);
-        Product CreateProduct(Product product);
-        bool UpdateProduct(Product product);
-        bool DeleteProduct(Product Product);
-        bool Save();
+        Task<ICollection<Product>> GetProducts(ProductQueryDto productQueryDto);
+        Task<Product> GetProductById(int id);
+        void CreateProduct(Product product);
+        void UpdateProduct(Product product);
+        void DeleteProduct(Product product);
+        Task<bool> Save();
 
-        TaxType GetTaxTypeForProductByProductId(int Id);
-        ICollection<OrderLine> GetProductInOrderLines(int Id);
+        Task<TaxType> GetTaxTypeForProductByProductId(int Id);
+        //Task<ICollection<OrderLine>> GetProductInOrderLines(int Id);
     }
 }

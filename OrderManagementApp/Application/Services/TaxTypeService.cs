@@ -19,16 +19,17 @@ namespace OrderManagementApp.Application.Services
 
         public async Task<TaxTypeDto> CreateTax(TaxTypeDto taxTypeDto)
         {
-            var itemTax = _taxTypeRepository.GetTaxTypeById(taxTypeDto.Id);
+            var itemTax = await _taxTypeRepository.GetTaxTypeById(taxTypeDto.Id);
 
             if (itemTax != null)
             {
+                
                 throw new InvalidOperationException("The TaxType already exists");
             }
 
             var Tax = _mapper.Map<TaxType>(taxTypeDto);
             _taxTypeRepository.CreateTaxType(Tax);
-
+            await _taxTypeRepository.Save();
             return _mapper.Map<TaxTypeDto>(Tax);
         }
 
@@ -36,12 +37,12 @@ namespace OrderManagementApp.Application.Services
         {
             var Tax = await _taxTypeRepository.GetTaxTypeById(id);
 
-            if (Tax != null)
+            if (Tax == null)
             {
                 throw new InvalidOperationException($"The TaxType with id {id} does not exist.");
             }
 
-            _taxTypeRepository.DeleteTaxType(Tax.Id);
+            _taxTypeRepository.DeleteTaxType(Tax);
 
             await _taxTypeRepository.Save();
         }
@@ -54,9 +55,9 @@ namespace OrderManagementApp.Application.Services
 
         public async Task<TaxTypeDto> UpdateTax(TaxTypeDto taxesDto)
         {
-            var Tax = _taxTypeRepository.GetTaxTypeById(taxesDto.Id);
+            var Tax = await _taxTypeRepository.GetTaxTypeById(taxesDto.Id);
 
-            if (Tax != null)
+            if (Tax == null)
             {
                 throw new InvalidOperationException($"The TaxType with id {taxesDto.Id} does not exist.");
             }
