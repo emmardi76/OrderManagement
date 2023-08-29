@@ -1,4 +1,5 @@
-﻿using OrderManagementApp.Domain.Entities;
+﻿using OrderManagementApp.Application.Dtos;
+using OrderManagementApp.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,14 +10,14 @@ namespace OrderManagementApp.Domain.Interfaces
 {
     public interface IOrderRepository
     {
-        ICollection<Order> GetOrders();
-        Order GetOrderById(int id);
-        Order CreateOrder(Order order);
-        bool UpdateOrder(Order order); 
-        bool DeleteOrder(int id);
-        bool Save();
+        Task<ICollection<Order>> GetOrders(OrderQueryDto orderQueryDto);
+        Task<Order> GetOrderById(int id);
+        void CreateOrder(Order order);
+        void UpdateOrder(Order order); 
+        void DeleteOrder(Order order);
+        Task<bool> Save();
 
-        ICollection<OrderLine> GetOrderLines(int orderId);
-        ICollection<Order> GetOrderByCustomerId(int customerId);
+        Task<ICollection<OrderLine>> GetOrderLines(int orderId);
+        Task<ICollection<Order>> GetOrderByCustomerId(int customerId);
     }
 }

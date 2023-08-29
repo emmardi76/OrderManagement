@@ -1,53 +1,103 @@
-﻿using OrderManagementApp.Domain.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using OrderManagementApp.Application.Dtos;
+using OrderManagementApp.Domain.Entities;
 using OrderManagementApp.Domain.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OrderManagementApp.Persistence.Repository
 {
     public class OrderRepository : IOrderRepository
     {
-        public Order CreateOrder(Order order)
+        private readonly OrderContext _orderContext;
+       
+
+        public OrderRepository(OrderContext orderContext)
         {
-            throw new NotImplementedException();
+            _orderContext = orderContext;
         }
 
-        public bool DeleteOrder(int id)
+        public void  CreateOrder(Order order)
         {
-            throw new NotImplementedException();
+            _orderContext.Orders.Add(order);
         }
 
-        public ICollection<Order> GetOrderByCustomerId(int customerId)
+        public void DeleteOrder(Order order)
         {
-            throw new NotImplementedException();
+            _orderContext.Orders.Remove(order);
         }
 
-        public Order GetOrderById(int id)
+        public async Task<ICollection<Order>> GetOrderByCustomerId(int customerId)
         {
-            throw new NotImplementedException();
+            return await _orderContext.Orders.Where(o => o.CustomerId == customerId).ToListAsync();
         }
 
-        public ICollection<OrderLine> GetOrderLines(int orderId)
+        public async Task<Order> GetOrderById(int id)
         {
-            throw new NotImplementedException();
+            return _orderContext.Orders.FirstOrDefault(o => o.Id == id);
         }
 
-        public ICollection<Order> GetOrders()
+        public async Task<ICollection<OrderLine>> GetOrderLines(int orderId)
         {
-            throw new NotImplementedException();
+            return await _orderContext.OrderLines.Where(ol => ol.OrderId == orderId).ToListAsync();
         }
 
-        public bool Save()
+        public async Task<ICollection<Order>> GetOrders(OrderQueryDto orderQueryDto)
         {
-            throw new NotImplementedException();
+            var orders = _orderContext.Orders.AsQueryable<Order>();
+
+            if (orderQueryDto != null)
+            { 
+                if(orderQueryDto.Id.HasValue)
+                {
+                    orders = orders.Where(o => o.Id == orderQueryDto.Id.Value);
+                }
+
+                if(orderQueryDto.CustomerId.HasValue)
+                {
+                    orders = orders.Where(o => o.CustomerId == orderQueryDto.CustomerId.Value);
+                }
+
+                if(orderQueryDto.CustomerAddressId.HasValue)
+                {
+                    orders = orders.Where(o => o.CustomerAddressId == orderQueryDto.CustomerAddressId.Value);
+                }
+
+                if (orderQueryDto.Date.HasValue)
+                {
+                    orders = orders.Where(o => o.Date == orderQueryDto.Date.Value);
+                }
+
+                if(orderQueryDto.OrderNumber.HasValue)
+                {
+                    orders = orders.Where(o => o.OrderNumber == orderQueryDto.OrderNumber.Value);
+                }
+
+                if(orderQueryDto.Remarks is not null)
+                {
+                    orders = orders.Where(o => o.Remarks !=null &&  orderQueryDto.Remarks.Contains(orderQueryDto.Remarks));
+                }
+                    
+                if(orderQueryDto.Total != 0)
+                {
+                    orders = orders.Where(o => o.Total.Equals(orderQueryDto.Total));
+                }
+
+                if (orderQueryDto.TaxBase != 0)
+                {
+                    orders = orders.Where(o => o.TaxBase.Equals(orderQueryDto.TaxBase));
+                }               
+            }
+
+            return await orders.OrderBy(o => o.Id).ToListAsync();
         }
 
-        public bool UpdateOrder(Order order)
+        public async Task<bool> Save()
         {
-            throw new NotImplementedException();
+            return await _orderContext.SaveChangesAsync() >=0 ? true: false;
+        }
+
+        public void UpdateOrder(Order order)
+        {
+            _orderContext.Orders.Update(order);
         }
     }
 }

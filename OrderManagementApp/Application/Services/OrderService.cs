@@ -16,39 +16,79 @@ namespace OrderManagementApp.Application.Services
             _mapper = mapper;
         }
 
-        public Task<OrderDto> CreateOrder(OrderDto orderDto)
+        public async Task<OrderDto> CreateOrder(OrderDto orderDto)
         {
-            throw new NotImplementedException();
+            var itemOrder = await _orderRepository.GetOrderById(orderDto.Id);
+
+            if (itemOrder != null) 
+            {
+                throw new InvalidOperationException("The order already exists");
+            }
+
+            var order = _mapper.Map<Order>(itemOrder);
+            _orderRepository.CreateOrder(order);
+            await _orderRepository.Save();
+
+            return _mapper.Map<OrderDto>(order);
         }
 
-        public Task DeleteOrder(int id)
+        public async Task DeleteOrder(int id)
         {
-            throw new NotImplementedException();
+            var order = await _orderRepository.GetOrderById(id);
+
+            if (order == null)
+            {
+                throw new InvalidOperationException($"The order with id {id} does not exist.");
+            }
+
+            _orderRepository.DeleteOrder(order);
+            await _orderRepository.Save();
         }
 
-        public Task<ICollection<OrderDto>> GetAllOrders(OrderQueryDto orderQueryDto)
+        public async Task<ICollection<OrderDto>> GetAllOrders(OrderQueryDto orderQueryDto)
         {
-            throw new NotImplementedException();
+            var listOrders = await _orderRepository.GetOrders(orderQueryDto);
+            return _mapper.Map<List<OrderDto>>(listOrders);
         }
 
-        public Task<ICollection<Order>> GetOrderByCustomerId(int customerId)
+        public async Task<ICollection<Order>> GetOrderByCustomerId(int customerId)
         {
-            throw new NotImplementedException();
+            var listOrders = await _orderRepository.GetOrderByCustomerId(customerId);
+
+            if (listOrders == null)
+            {
+                throw new InvalidOperationException($"The customerId {customerId} have not orders.");
+            }
+
+            return (ICollection<Order>)_mapper.Map<ICollection<OrderDto>>(listOrders);
         }
 
-        public Task<ICollection<OrderLine>> GetOrderLines(int orderId)
+        public async Task<ICollection<OrderLine>> GetOrderLines(int orderId)
         {
-            throw new NotImplementedException();
+            var listOrderLines = await _orderRepository.GetOrderLines(orderId);
+
+            return _mapper.Map<ICollection<OrderLine>>(listOrderLines);
         }
 
-        public Task<OrderDto> GetOrdersById(int id)
+        public async Task<OrderDto> GetOrdersById(int id)
         {
-            throw new NotImplementedException();
+            var itemOrder = await _orderRepository.GetOrderById(id);
+            return _mapper.Map<OrderDto>(itemOrder);
         }
 
-        public Task<OrderDto> UpdateOrder(OrderDto orderDto)
+        public async Task<OrderDto> UpdateOrder(OrderDto orderDto)
         {
-            throw new NotImplementedException();
+            var order = await _orderRepository.GetOrderById(orderDto.Id);
+
+            if (order == null)
+            {
+                throw new InvalidOperationException($"The order with id {orderDto.Id} does not exist.");
+            }
+
+            _mapper.Map(orderDto, order);
+            await _orderRepository.Save();
+
+            return _mapper.Map<OrderDto>(order);
         }
     }
 }
