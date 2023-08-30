@@ -13,9 +13,8 @@ namespace OrderManagementApp.Application.Dtos
         public int? CustomerAddressId { get; set; }
         public DateTime? Date { get; set; }
         public int? OrderNumber { get; set; }
-        public string? Remarks { get; set; }
-        //public decimal TotalWithoutTaxes { get; set; }
+        public string? Remarks { get; set; }        
         public decimal? Total { get; set; }
-        public decimal? TaxBase { get; set; }
+        public decimal? TotalTaxes { get; set; }
     }
 }

@@ -12,7 +12,7 @@
         public decimal UnitPrice { get; set; }
         public decimal TotalWithoutTaxes { get; set; }
         public decimal Total { get; set;}
-        public decimal TaxBase { get; set; } //check if we want this field here
+        public decimal TotalTaxes { get; set; } //check if we want this field here
 
         public Product? Product { get; set; }    
         public TaxType? TaxType { get; set; }

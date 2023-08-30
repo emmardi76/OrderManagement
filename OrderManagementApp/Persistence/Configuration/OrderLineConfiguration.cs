@@ -28,7 +28,7 @@ namespace OrderManagementApp.Persistence.Configuration
                  .HasColumnType("decimal(18,2)");
             builder.Property(p => p.Total)
                  .HasColumnType("decimal(18,2)");
-            builder.Property(p => p.TaxBase)
+            builder.Property(p => p.TotalTaxes)
                  .HasColumnType("decimal(18,2)");
 
             builder.HasOne(p => p.Order)

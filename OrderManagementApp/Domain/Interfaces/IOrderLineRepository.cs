@@ -1,4 +1,5 @@
-﻿using OrderManagementApp.Domain.Entities;
+﻿using OrderManagementApp.Application.Dtos;
+using OrderManagementApp.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,14 +10,15 @@ namespace OrderManagementApp.Domain.Interfaces
 {
     public interface IOrderLineRepository
     {
-        ICollection<OrderLine> GetOrderLines(int orderId);
-        OrderLine CreateOrderLines(OrderLine orderLine, int orderId);
-        bool UpdateOrderLines(OrderLine orderLine, int orderId);
-        bool DeleteOrderLines(int orderId);
-        bool Save();
+        Task<ICollection<OrderLine>> GetOrderLines(int orderId);
+        void CreateOrderLine(OrderLine orderLine);
+        void UpdateOrderLine(OrderLine orderLine);
+        void DeleteOrderLine(OrderLine orderLine);
+        Task<bool> Save();
 
-        Product GetProductinOrderLine(int productId,int orderId,int Id);
-        TaxType GetTaxTypeinOrderLine(int orderId, int Id);
-        Order GetOrderByOrderLineId(int Id);
+        //Task<Product> GetProductinOrderLine(int productId,int orderId,int Id);
+        //Task<TaxType> GetTaxTypeinOrderLine(int orderId, int Id);
+        Task<Order> GetOrderByOrderIdinOrderLine(int orderId);
+        Task<ICollection<OrderLine>> GetOrderLines(OrderLineQueryDto orderLineQueryDto);
     }
 }

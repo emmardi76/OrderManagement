@@ -81,9 +81,9 @@ namespace OrderManagementApp.Persistence.Repository
                     orders = orders.Where(o => o.Total.Equals(orderQueryDto.Total));
                 }
 
-                if (orderQueryDto.TaxBase != 0)
+                if (orderQueryDto.TotalTaxes != 0)
                 {
-                    orders = orders.Where(o => o.TaxBase.Equals(orderQueryDto.TaxBase));
+                    orders = orders.Where(o => o.TotalTaxes.Equals(orderQueryDto.TotalTaxes));
                 }               
             }
 

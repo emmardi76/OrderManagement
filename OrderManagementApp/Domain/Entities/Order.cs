@@ -16,7 +16,7 @@ namespace OrderManagementApp.Domain.Entities
         public string? Remarks { get; set; }
         public decimal TotalWithoutTaxes { get; set; }
         public decimal Total { get; set; }
-        public decimal TaxBase { get; set; } //check if we want this field here
+        public decimal TotalTaxes { get; set; } //check if we want this field here
 
         public Customer? Customer { get; set; }
         public CustomerAddress? CustomerAddress { get; set; }

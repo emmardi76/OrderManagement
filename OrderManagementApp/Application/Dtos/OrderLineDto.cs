@@ -19,6 +19,6 @@ namespace OrderManagementApp.Application.Dtos
         public decimal UnitPrice { get; set; }
         public decimal TotalWithoutTaxes { get; set; }
         public decimal Total { get; set; }
-        public decimal TaxBase { get; set; }       
+        public decimal TotalTaxes { get; set; }       
     }
 }

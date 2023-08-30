@@ -59,7 +59,7 @@ namespace OrderManagementApp.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet("GetOrderByCustomerId/{id}")]
+        [HttpGet("GetOrderByCustomerId/{customerId}")]
         public async Task<IActionResult> GetOrderByCustomerId(int customerId)
         { 
             var listOrders = await _orderService.GetOrderByCustomerId(customerId);
@@ -86,7 +86,7 @@ namespace OrderManagementApp.Controllers
         }
 
         [AllowAnonymous]
-        [HttpDelete("id", Name = "DeleteCustomer")]
+        [HttpDelete("id", Name = "DeleteOrder")]
         public async Task<IActionResult> DeleteOrder(int id)
         { 
             await _orderService.DeleteOrder(id);

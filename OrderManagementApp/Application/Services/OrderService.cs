@@ -10,6 +10,7 @@ namespace OrderManagementApp.Application.Services
     {
         private readonly IOrderRepository _orderRepository;
         private readonly IMapper _mapper;
+
         public OrderService(IOrderRepository orderRepository, IMapper mapper)
         {
             _orderRepository = orderRepository;
@@ -25,7 +26,8 @@ namespace OrderManagementApp.Application.Services
                 throw new InvalidOperationException("The order already exists");
             }
 
-            var order = _mapper.Map<Order>(itemOrder);
+            var order = _mapper.Map<Order>(orderDto);
+            
             _orderRepository.CreateOrder(order);
             await _orderRepository.Save();
 
