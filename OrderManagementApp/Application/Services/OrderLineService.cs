@@ -42,19 +42,6 @@ namespace OrderManagementApp.Application.Services
         {
             var listOrderLines = await _orderLineRepository.GetOrderLines(orderLineQueryDto);
 
-            var listOrderLinesDto = new List<OrderLineDto>();
-
-            foreach (var list in listOrderLines)
-            {
-                listOrderLinesDto.Add(_mapper.Map<OrderLineDto>(list));
-            }
-
-            return _mapper.Map<ICollection<OrderLineDto>>(listOrderLinesDto);
-        }
-
-        public async Task<ICollection<OrderLineDto>> GetOrderLinesByOrderId(int orderId)
-        {
-            var listOrderLines = await _orderLineRepository.GetOrderByOrderIdinOrderLine(orderId);
             return _mapper.Map<ICollection<OrderLineDto>>(listOrderLines);
         }
 

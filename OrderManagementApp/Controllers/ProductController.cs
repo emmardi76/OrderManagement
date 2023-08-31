@@ -24,21 +24,6 @@ namespace OrderManagementApp.Controllers
             return Ok(await _productService.GetProducts(productQueryDto));
         }
 
-        [AllowAnonymous]
-        [HttpGet("GetProductsById/{id}")]
-        public async Task<IActionResult> GetProductsById(int id)
-        {
-            var itemProduct = await _productService.GetProductById(id);
-
-            if (itemProduct == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(itemProduct);
-
-        }
-
         [HttpPost(Name = "CreateProduct")]
         public async Task<IActionResult> CreateProduct(ProductDto productDto)
         {

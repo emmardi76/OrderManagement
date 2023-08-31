@@ -8,14 +8,14 @@ namespace OrderManagementApp.Persistence.Repository
     public class OrderRepository : IOrderRepository
     {
         private readonly OrderContext _orderContext;
-       
+
 
         public OrderRepository(OrderContext orderContext)
         {
             _orderContext = orderContext;
         }
 
-        public void  CreateOrder(Order order)
+        public void CreateOrder(Order order)
         {
             _orderContext.Orders.Add(order);
         }
@@ -40,23 +40,23 @@ namespace OrderManagementApp.Persistence.Repository
             return await _orderContext.OrderLines.Where(ol => ol.OrderId == orderId).ToListAsync();
         }
 
-        public async Task<ICollection<Order>> GetOrders(OrderQueryDto orderQueryDto)
+        public async Task<ICollection<Order>> GetOrders(OrderQueryDto? orderQueryDto = null)
         {
             var orders = _orderContext.Orders.AsQueryable<Order>();
 
             if (orderQueryDto != null)
-            { 
-                if(orderQueryDto.Id.HasValue)
+            {
+                if (orderQueryDto.Id.HasValue)
                 {
                     orders = orders.Where(o => o.Id == orderQueryDto.Id.Value);
                 }
 
-                if(orderQueryDto.CustomerId.HasValue)
+                if (orderQueryDto.CustomerId.HasValue)
                 {
                     orders = orders.Where(o => o.CustomerId == orderQueryDto.CustomerId.Value);
                 }
 
-                if(orderQueryDto.CustomerAddressId.HasValue)
+                if (orderQueryDto.CustomerAddressId.HasValue)
                 {
                     orders = orders.Where(o => o.CustomerAddressId == orderQueryDto.CustomerAddressId.Value);
                 }
@@ -66,25 +66,25 @@ namespace OrderManagementApp.Persistence.Repository
                     orders = orders.Where(o => o.Date == orderQueryDto.Date.Value);
                 }
 
-                if(orderQueryDto.OrderNumber.HasValue)
+                if (orderQueryDto.OrderNumber.HasValue)
                 {
                     orders = orders.Where(o => o.OrderNumber == orderQueryDto.OrderNumber.Value);
                 }
 
-                if(orderQueryDto.Remarks is not null)
+                if (orderQueryDto.Remarks is not null)
                 {
-                    orders = orders.Where(o => o.Remarks !=null &&  orderQueryDto.Remarks.Contains(orderQueryDto.Remarks));
-                }
-                    
-                if(orderQueryDto.Total != 0)
-                {
-                    orders = orders.Where(o => o.Total.Equals(orderQueryDto.Total));
+                    orders = orders.Where(o => o.Remarks != null && orderQueryDto.Remarks.Contains(orderQueryDto.Remarks));
                 }
 
-                if (orderQueryDto.TotalTaxes != 0)
+                if (orderQueryDto.Total.HasValue)
+                {
+                    orders = orders.Where(o => o.Total == orderQueryDto.Total.Value);
+                }
+
+                if (orderQueryDto.TotalTaxes.HasValue)
                 {
                     orders = orders.Where(o => o.TotalTaxes.Equals(orderQueryDto.TotalTaxes));
-                }               
+                }
             }
 
             return await orders.OrderBy(o => o.Id).ToListAsync();
@@ -92,7 +92,7 @@ namespace OrderManagementApp.Persistence.Repository
 
         public async Task<bool> Save()
         {
-            return await _orderContext.SaveChangesAsync() >=0 ? true: false;
+            return await _orderContext.SaveChangesAsync() >= 0 ? true : false;
         }
 
         public void UpdateOrder(Order order)

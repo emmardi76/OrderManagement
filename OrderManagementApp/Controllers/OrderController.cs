@@ -26,50 +26,7 @@ namespace OrderManagementApp.Controllers
         [HttpGet("GetOrders")]
         public async Task<IActionResult> GetOrders([FromQuery] OrderQueryDto orderQueryDto)
         {
-            return Ok(await _orderService.GetAllOrders(orderQueryDto));
-        }
-
-        [AllowAnonymous]
-        [HttpGet("GetOrdersById/{id}")]
-        public async Task<IActionResult> GetOrdersById(int id)
-        {
-            var itemOrder = await _orderService.GetOrdersById(id);
-
-            if(itemOrder == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(itemOrder);
-
-        }
-
-        [AllowAnonymous]
-        [HttpGet("GetOrderLines/{id}")]
-        public async Task<IActionResult> GetOrderLines(int orderId)
-        {
-            var listOrderlines = await _orderService.GetOrderLines(orderId);
-
-            if (listOrderlines == null)
-            { 
-                return NotFound();
-            }
-
-            return Ok(listOrderlines);
-        }
-
-        [AllowAnonymous]
-        [HttpGet("GetOrderByCustomerId/{customerId}")]
-        public async Task<IActionResult> GetOrderByCustomerId(int customerId)
-        { 
-            var listOrders = await _orderService.GetOrderByCustomerId(customerId);
-
-            if (listOrders == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(listOrders);
+            return Ok(await _orderService.GetOrders(orderQueryDto));
         }
 
         [HttpPost(Name = "CreateOrder")]

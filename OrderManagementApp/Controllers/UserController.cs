@@ -50,35 +50,7 @@ namespace OrderManagementApp.Controllers
         public async Task<IActionResult> GetUsers([FromQuery] UserQueryDto userQueryDto)
         {
             return Ok(await _userService.GetUsers(userQueryDto));
-        }
-
-        [AllowAnonymous]
-        [HttpGet("{id:int}", Name = "GetUserById")]
-        public async Task<IActionResult> GetUserById(int id) // Check if must return a userDto or user and do the conversion in service or controller
-        { 
-            var itemUser = await _userService.GetUserById(id);
-
-            if (itemUser == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(itemUser);
-        }
-
-        [AllowAnonymous]
-        [HttpGet("getByEmail", Name = "GetUserByEmail")]
-        public async Task<IActionResult> GetUserByEmail(string email)
-        {
-            var itemUser = await _userService.GetUserByEmail(email);
-
-            if (itemUser == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(itemUser);
-        }
+        }            
 
         [AllowAnonymous]
         [HttpPut(Name ="UpdateUser")]

@@ -23,15 +23,7 @@ namespace OrderManagementApp.Controllers
         {
            var ListCustomerAddresses = await  _customerAddressService.GetCustomerAddresses(customerAddressQueryDto);
            return Ok(ListCustomerAddresses);
-        }
-
-        [AllowAnonymous]
-        [HttpGet("GetCustomerAddresses/{customerId}")]
-        public async Task<IActionResult> GetCustomerAddressesByCustomerId(int customerId)
-        {
-            var ListCustomerAddresses = await _customerAddressService.GetCustomerAddressesByCustomerId(customerId);
-            return Ok(ListCustomerAddresses);
-        }
+        }      
 
         [HttpPost(Name = "CreateCustomerAddress")]
         public async Task<IActionResult> CreateCustomer(CustomerAddressDto customerAddressDto)
