@@ -10,7 +10,7 @@ namespace OrderManagementApp.Domain.Entities
     {
         public int Id { get; set; }
         public string? Name { get; set; }
-        public int TaxPercentage { get; set; }
+        public decimal TaxPercentage { get; set; }
 
         public ICollection<Product>? Product { get; set; }
         public ICollection<OrderLine>? OrderLines { get; init; } = new HashSet<OrderLine>();

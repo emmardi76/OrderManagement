@@ -20,9 +20,9 @@ namespace OrderManagementApp.Controllers
 
         [AllowAnonymous]
         [HttpPost("RegisterUser")]
-        public async Task<IActionResult> RegisterUser(UserDto userDto, string password)
+        public async Task<IActionResult> RegisterUser(RegisterUserDto registerUserDto)
         {
-            return Ok(await _userService.RegisterUser(userDto, password));
+            return Ok(await _userService.RegisterUser(registerUserDto));
         }
 
         [AllowAnonymous]

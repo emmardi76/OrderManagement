@@ -86,7 +86,7 @@ namespace OrderManagementApp.Application.Services
             {
                 case PasswordVerificationResult.Failed:
                     Console.WriteLine("Password incorrect.");
-                    break;
+                    return null;
 
                 case PasswordVerificationResult.Success:
                     Console.WriteLine("Password ok.");
@@ -105,17 +105,17 @@ namespace OrderManagementApp.Application.Services
             return userAuthDto;
         }
 
-        public async Task<UserDto> RegisterUser(UserDto userDto, string password)
+        public async Task<UserDto> RegisterUser(RegisterUserDto registerUserDto)
         {
-            var itemUser = await _userRepository.GetUserByEmail(userDto.Email);
+            var itemUser = await _userRepository.GetUserByEmail(registerUserDto.Email);
 
             if (itemUser != null)
             {
                 throw new InvalidOperationException("The user already exists");
             }
 
-            var user = _mapper.Map<User>(userDto);
-            var hashedPassword = new PasswordHasher<User>().HashPassword(null, password);
+            var user = _mapper.Map<User>(registerUserDto);
+            var hashedPassword = new PasswordHasher<User>().HashPassword(null, registerUserDto.Password);
             user.PasswordHash = hashedPassword;
             _userRepository.RegisterUser(user);
             await _userRepository.Save();

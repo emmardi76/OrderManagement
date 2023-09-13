@@ -10,6 +10,7 @@ namespace OrderManagementApp.Application.Adapters
         public OrderMapper()
         {
             CreateMap<User, UserDto>().ReverseMap();
+            CreateMap<User, RegisterUserDto>().ReverseMap();
             CreateMap<User, UserAuthDto>().ReverseMap();
             CreateMap<Customer, CustomerDto>().ReverseMap();         
             CreateMap<CustomerAddress, CustomerAddressDto>().ReverseMap();

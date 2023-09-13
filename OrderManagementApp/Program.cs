@@ -88,7 +88,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
     };
 });
 
-
+/*We support CORS*/
+builder.Services.AddCors();
 
 var app = builder.Build();
 
@@ -105,5 +106,8 @@ app.UseAuthorization();
 
 ControllerActionEndpointConventionBuilder controllerActionEndpointConventionBuilder = app.MapControllers();
 //app.MapControllers();
+
+/*We support CORS*/
+app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
 app.Run();

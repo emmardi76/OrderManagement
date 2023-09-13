@@ -4,7 +4,7 @@ namespace OrderManagementApp.Application.Services.ServiceInterfaces
 {
     public interface IUserService
     {
-        Task<UserDto> RegisterUser(UserDto userDto, string password);
+        Task<UserDto> RegisterUser(RegisterUserDto registerUserDto);
         Task<UserAuthDto?> LoginUser(string email, string password);
         Task<bool> ExistUser(string firstName, string lastName);
         Task<ICollection<UserDto>> GetUsers(UserQueryDto userQueryDto);

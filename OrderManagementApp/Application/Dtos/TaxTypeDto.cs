@@ -11,6 +11,6 @@ namespace OrderManagementApp.Application.Dtos
     {
         public int Id { get; set; }
         public string? Name { get; set; }
-        public int TaxPercentage { get; set; }        
+        public decimal TaxPercentage { get; set; }        
     }
 }
