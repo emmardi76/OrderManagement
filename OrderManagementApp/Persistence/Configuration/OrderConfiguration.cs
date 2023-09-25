@@ -19,7 +19,8 @@ namespace OrderManagementApp.Persistence.Configuration
             builder.Property(p => p.Date)
                 .IsRequired(true);
             builder.Property(p => p.OrderNumber)
-                .HasMaxLength(10);
+                .HasMaxLength(10)
+                .IsRequired(true);
             builder.Property(p => p.Remarks)
                  .HasMaxLength(200);
             builder.Property(p => p.TotalWithoutTaxes)

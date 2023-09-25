@@ -9,5 +9,6 @@ namespace OrderManagementApp.Application.Services.ServiceInterfaces
         Task<ICollection<OrderDto>> GetOrders(OrderQueryDto orderQueryDto);
         Task<OrderDto> UpdateOrder(OrderDto orderDto);
         Task DeleteOrder(int id);
+        void SetOrderTotals(Order order);
     }
 }

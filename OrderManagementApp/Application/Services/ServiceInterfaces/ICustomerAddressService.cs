@@ -8,6 +8,6 @@ namespace OrderManagementApp.Application.Services.ServiceInterfaces
         Task<ICollection<CustomerAddressDto>> GetCustomerAddressesByCustomerId(int customerId);
         Task CreateCustomerAddress(CustomerAddressDto customerAddressDto);
         Task UpdateCustomerAddress(CustomerAddressDto customerAddressDto);
-        Task DeleteCustomerAddress(CustomerAddressDto customerAddressDto);  
+        Task DeleteCustomerAddress(int customerAddressId);  
     }
 }

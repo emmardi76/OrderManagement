@@ -23,7 +23,12 @@ namespace OrderManagementApp.Persistence.Repository
         public void DeleteOrderLine(OrderLine orderLine)
         {
             _orderContext.OrderLines.Remove(orderLine);
-        }        
+        }
+
+        public async Task<OrderLine?> GetOrderLineById(int orderLineId)
+        {
+            return await _orderContext.OrderLines.FirstOrDefaultAsync(x => x.Id == orderLineId);
+        }
 
         public async Task<ICollection<OrderLine>> GetOrderLines(int orderId)
         {

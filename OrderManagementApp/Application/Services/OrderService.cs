@@ -26,7 +26,23 @@ namespace OrderManagementApp.Application.Services
                 throw new InvalidOperationException("The order already exists");
             }
 
+            var orderQueryDto = new OrderQueryDto
+            {
+                OrderNumber = orderDto.OrderNumber
+            };
+
+            var orders = await _orderRepository.GetOrders(orderQueryDto);
+
+            if (orders.Any()){
+
+                throw new InvalidOperationException("The order number already exists");
+            }           
+
             var order = _mapper.Map<Order>(orderDto);
+
+            order.TotalWithoutTaxes = 0;
+            order.TotalTaxes = 0;
+            order.Total = 0;
             
             _orderRepository.CreateOrder(order);
             await _orderRepository.Save();
@@ -66,6 +82,19 @@ namespace OrderManagementApp.Application.Services
             await _orderRepository.Save();
 
             return _mapper.Map<OrderDto>(order);
+        }
+
+        public void SetOrderTotals(Order order)
+        {
+            order.Total = 0;
+            order.TotalWithoutTaxes = 0;
+            order.TotalTaxes = 0;
+            foreach (var orderLine in order.OrderLines)
+            {
+                order.Total = order.Total + orderLine.Total;
+                order.TotalWithoutTaxes = order.TotalWithoutTaxes + orderLine.TotalWithoutTaxes;
+                order.TotalTaxes = order.TotalTaxes + orderLine.TotalTaxes;
+            }
         }
     }
 }

@@ -11,6 +11,7 @@ namespace OrderManagementApp.Domain.Interfaces
     public interface ICustomerAddressRepository
     {
         Task<ICollection<CustomerAddress>> GetCustomerAddresses(CustomerAddressQueryDto customerAddressQueryDto);
+        Task<CustomerAddress?> GetCustomerAddressById(int customerAddressId);
         Task<ICollection<CustomerAddress>> GetCustomerAddressesByCustomerId(int customerId);
         void CreateCustomerAddress(CustomerAddress customerAddress);
         void UpdateCustomerAddress(CustomerAddress customerAddress);

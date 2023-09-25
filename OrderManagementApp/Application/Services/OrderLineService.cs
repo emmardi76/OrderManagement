@@ -3,38 +3,54 @@ using OrderManagementApp.Application.Dtos;
 using OrderManagementApp.Application.Services.ServiceInterfaces;
 using OrderManagementApp.Domain.Entities;
 using OrderManagementApp.Domain.Interfaces;
+using OrderManagementApp.Persistence.Repository;
 
 namespace OrderManagementApp.Application.Services
 {
     public class OrderLineService : IOrderLineService
     {
         private readonly IOrderLineRepository _orderLineRepository;
+        private readonly IOrderRepository _orderRepository;
+        private readonly IOrderService _orderService;
         private readonly IMapper _mapper;
 
-        public OrderLineService(IOrderLineRepository orderLineRepository, IMapper mapper)
+        public OrderLineService(IOrderLineRepository orderLineRepository, IOrderRepository orderRepository, IOrderService orderService, IMapper mapper)
         {
             _orderLineRepository = orderLineRepository;
+            _orderRepository = orderRepository;
+            _orderService = orderService;
             _mapper = mapper;
         }
 
         public async Task CreateOrderLine(OrderLineDto orderLineDto)
         {
-            var orderLine = new OrderLine();
+            // 1.-Obtener el pedido con sus lineas para operar con él.
+            var order = await _orderRepository.GetOrderWithLinesByOrderId(orderLineDto.OrderId);
+            if (order == null) 
+            {
+                throw new InvalidOperationException($"The order {orderLineDto.OrderId} does not exist.");
+            }
+
+            // 2.-Operar con la línea, en este caso crearla y asignarla al pedido.
+            var orderLine = new OrderLine();           
             _mapper.Map(orderLineDto, orderLine);
-            _orderLineRepository.CreateOrderLine(orderLine);
+            orderLine.TotalWithoutTaxes = Math.Round(orderLine.Quantity * orderLine.UnitPrice, 2);
+            orderLine.TotalTaxes = Math.Round(orderLine.TotalWithoutTaxes * (orderLine.TaxPercentage / 100), 2);
+            orderLine.Total = Math.Round(orderLine.TotalWithoutTaxes + orderLine.TotalTaxes, 2);
+            order.OrderLines.Add(orderLine);
+
+            // 3.-Llamar a la función que modifica el pedido calculando los totales.
+            _orderService.SetOrderTotals(order);
+
+            // 4.-Realizar el guardado (Save del repositorio.)
             await _orderLineRepository.Save();
         }
 
-        public async Task DeleteOrderLine(OrderLineDto orderLineDto)
+        public async Task DeleteOrderLine(int orderLineId)
         {
-            var ListOrderLine = await _orderLineRepository.GetOrderLines(orderLineDto.OrderId);
+            var orderLine = await GetOrderLineById(orderLineId);            
 
-            if (ListOrderLine.First(ol => ol.Id == orderLineDto.Id) == null)
-            {
-                throw new InvalidOperationException($"The orderLine with id {orderLineDto.Id} does not exist.");
-            }
-
-            _orderLineRepository.DeleteOrderLine(ListOrderLine.First(ol => ol.Id == orderLineDto.Id));
+            _orderLineRepository.DeleteOrderLine(orderLine);
             await _orderLineRepository.Save();
         }
 
@@ -58,5 +74,16 @@ namespace OrderManagementApp.Application.Services
             _mapper.Map(orderLineDto, orderline);
             await _orderLineRepository.Save();
         }
+
+        private async Task<OrderLine> GetOrderLineById(int orderLineId)
+        {
+            var orderLine = await _orderLineRepository.GetOrderLineById(orderLineId);
+            if (orderLine == null)
+            {
+                throw new InvalidOperationException($"The orderLine with id {orderLineId} does not exist.");
+            }
+            return orderLine;
+        }
+
     }
 }

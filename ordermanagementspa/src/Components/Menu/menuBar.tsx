@@ -15,32 +15,22 @@ const MenuBar = (): JSX.Element => {
             </Icon>
           </li>
           <li>
-            <Link className="nav-link" to={"/Home"}>
+            <Link className="nav-link" to={"/HomeView"}>
               Home
             </Link>
           </li>
           <li>
-            <Link className="nav-link" to={"/Customer"}>
+            <Link className="nav-link" to={"/Customer/customerSearchForm"}>
               Customer
             </Link>
           </li>
           <li>
-            <Link className="nav-link" to={"/CustomerAddress"}>
-              CustomerAddress
-            </Link>
-          </li>
-          <li>
-            <Link className="nav-link" to={"/Order"}>
+            <Link className="nav-link" to={"/Order/orderSearchForm"}>
               Order
             </Link>
           </li>
           <li>
-            <Link className="nav-link" to={"/OrderLine"}>
-              OrderLine
-            </Link>
-          </li>
-          <li>
-            <Link className="nav-link" to={"/Product"}>
+            <Link className="nav-link" to={"/Product/productSearchForm"}>
               Product
             </Link>
           </li>

@@ -26,6 +26,7 @@ namespace OrderManagementApp.Persistence.Repository
         public async Task<ICollection<CustomerAddress>> GetCustomerAddresses(CustomerAddressQueryDto? customerAddressQueryDto=null)
         {
             var customerAdresses = _orderContext.CustomerAddresses.AsQueryable<CustomerAddress>();
+
             if (customerAddressQueryDto != null)
             {
                 if (customerAddressQueryDto.Id.HasValue)
@@ -44,7 +45,12 @@ namespace OrderManagementApp.Persistence.Repository
                 }
             }
 
-            return  await _orderContext.CustomerAddresses.OrderBy(ca => ca.CustomerId).ToListAsync();
+            return  await customerAdresses.OrderBy(ca => ca.CustomerId).ToListAsync();
+        }
+
+        public async Task<CustomerAddress?> GetCustomerAddressById(int customerAddressId)
+        {
+            return await _orderContext.CustomerAddresses.FirstOrDefaultAsync(x => x.Id == customerAddressId);
         }
 
         public async Task<ICollection<CustomerAddress>> GetCustomerAddressesByCustomerId(int customerId)

@@ -2,7 +2,7 @@ import { Close, Search, ArrowBack } from "@mui/icons-material";
 import { Button, Container, Icon, TextField } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { GetTaxes } from "../Services/taxTypeServices";
+import { getTaxes } from "../Services/taxTypeServices";
 import { TaxType } from "../../Models/TaxType";
 import SearchTaxTypeView from "./searchTaxTypeView";
 import { TaxTypeQuery } from "../../Models/TaxTypeQuery";
@@ -16,7 +16,7 @@ export const TaxTypeSearchForm = (): JSX.Element => {
   const [taxTypes, setTaxTypes] = useState<TaxType[]>([]);
 
   const handleSearch = async () => {
-    const { data: taxtypes } = await GetTaxes(search);
+    const { data: taxtypes } = await getTaxes(search);
     setTaxTypes(taxtypes);
   };
 

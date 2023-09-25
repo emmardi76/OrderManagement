@@ -39,10 +39,10 @@ namespace OrderManagementApp.Controllers
             return Ok();
         }
 
-        [HttpDelete(Name = "DeleteOrderLine")]
-        public async Task<IActionResult> DeleteOrderLine(OrderLineDto orderLineDto)
+        [HttpDelete("{orderLineId}", Name = "DeleteOrderLine")]
+        public async Task<IActionResult> DeleteOrderLine(int orderLineId)
         {
-            await _orderLineService.DeleteOrderLine(orderLineDto);
+            await _orderLineService.DeleteOrderLine(orderLineId);
             return Ok();
         }
     }

@@ -20,7 +20,6 @@ const RegisterForm = () => {
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
-    console.log(user);
     await register(user);
     navigate({ pathname: "/" });
   };
@@ -32,7 +31,6 @@ const RegisterForm = () => {
       ...user,
       [e.target.name]: e.target.value,
     });
-    console.log([e.target.name], e.target.value);
   };
 
   return (

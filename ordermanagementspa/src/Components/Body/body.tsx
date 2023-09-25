@@ -1,15 +1,16 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import { Route, Routes } from "react-router-dom";
 import RegisterForm from "../Register/registerForm";
 import LoginForm from "../Login/loginForm";
 import HomeView from "../Home/homeView";
-import TaxTypeForm from "../TaxType/taxTypeForm";
 import { LoginContext } from "../Context/loginContext";
 import { TaxTypeSearchForm } from "../TaxType/taxTypeSearchForm";
+import { ProductSearchForm } from "../Product/productSearchForm";
+import CustomerSearchForm from "../Customer/customerSearchForm";
+import OrderSearchForm from "../Order/orderSearchForm";
 
 export const Body = (): JSX.Element => {
   const { userId } = useContext(LoginContext);
-  console.log("userId", userId);
   return (
     <>
       <Routes>
@@ -17,13 +18,18 @@ export const Body = (): JSX.Element => {
         <Route path="/homeview" element={<HomeView />} />
         <Route path="/register" element={<RegisterForm />} />
         <Route
-          path="/TaxType/taxTypeForm"
-          element={<TaxTypeForm id={0} name={""} taxPercentage={0} />}
+          path="/Product/productSearchForm"
+          element={<ProductSearchForm />}
         />
         <Route
           path="/TaxType/taxTypeSearchForm"
           element={<TaxTypeSearchForm />}
         />
+        <Route
+          path="/Customer/customerSearchForm"
+          element={<CustomerSearchForm />}
+        />
+        <Route path="/Order/orderSearchForm" element={<OrderSearchForm />} />
       </Routes>
     </>
   );

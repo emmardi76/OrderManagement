@@ -12,7 +12,7 @@ namespace OrderManagementApp.Domain.Entities
         public int CustomerId { get; set; }
         public int CustomerAddressId{ get; set; }
         public DateTime Date { get; set; }
-        public int OrderNumber { get; set; }
+        public string? OrderNumber { get; set; }
         public string? Remarks { get; set; }
         public decimal TotalWithoutTaxes { get; set; }
         public decimal Total { get; set; }
@@ -20,6 +20,6 @@ namespace OrderManagementApp.Domain.Entities
 
         public Customer? Customer { get; set; }
         public CustomerAddress? CustomerAddress { get; set; }
-        public ICollection<OrderLine>? OrderLines { get; init; } = new List<OrderLine>();
+        public ICollection<OrderLine> OrderLines { get; init; } = new List<OrderLine>();
     }
 }

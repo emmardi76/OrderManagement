@@ -7,6 +7,6 @@ namespace OrderManagementApp.Application.Services.ServiceInterfaces
         Task<ICollection<OrderLineDto>> GetOrderLines(OrderLineQueryDto orderLineQueryDto);
         Task CreateOrderLine(OrderLineDto orderLineDto);
         Task UpdateOrderLine(OrderLineDto orderLineDto);
-        Task DeleteOrderLine(OrderLineDto orderLineDto);
+        Task DeleteOrderLine(int orderLineId);
     }
 }

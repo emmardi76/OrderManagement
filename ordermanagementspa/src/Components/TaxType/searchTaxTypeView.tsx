@@ -1,18 +1,26 @@
 import { TaxType } from "../../Models/TaxType";
 import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
 import { Button, Icon, Stack } from "@mui/material";
-import { useNavigate } from "react-router-dom";
-import { DeleteTaxType, UpdateTaxType } from "../Services/taxTypeServices";
+import { deleteTaxType } from "../Services/taxTypeServices";
 import { Add } from "@mui/icons-material";
+import { useEffect, useState } from "react";
+import TaxTypeFormDialog from "./taxTypeFormDialog";
 
 interface SearchTaxTypeViewProps {
   taxTypes: TaxType[];
 }
 
+let defaultTaxType: TaxType = {
+  id: 0,
+  name: "",
+  taxPercentage: 0,
+};
+
 const SearchTaxTypeView = ({
   taxTypes,
 }: SearchTaxTypeViewProps): JSX.Element => {
-  const columns: GridColDef<any>[] = [
+  const [currentTaxType, setCurrentTaxType] = useState<TaxType>();
+  const columns: GridColDef<TaxType>[] = [
     {
       field: `id`,
       headerName: `ID`,
@@ -25,21 +33,16 @@ const SearchTaxTypeView = ({
       headerName: "Action",
       sortable: false,
       width: 180,
-      //disableClickEventBubbling: true,
 
       renderCell: (params) => {
         const onClickEdit = () => {
           const currentRow = params.row;
-          return UpdateTaxType(currentRow);
-          // alert(JSON.stringify(currentRow, null, 4));
+          setCurrentTaxType(currentRow);
         };
 
         const onClickDelete = () => {
           const currentRow = params.row;
-          return (
-            //alert(JSON.stringify(currentRow, null, 4)),
-            DeleteTaxType(currentRow.id)
-          );
+          return deleteTaxType(currentRow.id);
         };
 
         // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -68,7 +71,18 @@ const SearchTaxTypeView = ({
     },
   ];
 
-  const navigate = useNavigate();
+  const [openTaxTypeForm, setOpenTaxTypeForm] = useState(false);
+
+  useEffect(() => {
+    if (currentTaxType) {
+      setOpenTaxTypeForm(true);
+    }
+  }, [currentTaxType, setOpenTaxTypeForm]);
+
+  const handleClose = () => {
+    setOpenTaxTypeForm(false);
+    setCurrentTaxType(undefined);
+  };
 
   return (
     <>
@@ -79,7 +93,7 @@ const SearchTaxTypeView = ({
         variant="contained"
         color="primary"
         onClick={() => {
-          navigate({ pathname: "/TaxType/taxTypeForm/" });
+          setCurrentTaxType(defaultTaxType);
         }}
       >
         <Icon color="action">
@@ -97,6 +111,11 @@ const SearchTaxTypeView = ({
         }}
         pageSizeOptions={[5, 10]}
       ></DataGrid>
+      <TaxTypeFormDialog
+        taxType={currentTaxType ?? defaultTaxType}
+        open={openTaxTypeForm}
+        onClose={handleClose}
+      ></TaxTypeFormDialog>
     </>
   );
 };

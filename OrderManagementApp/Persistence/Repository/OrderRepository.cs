@@ -2,6 +2,7 @@
 using OrderManagementApp.Application.Dtos;
 using OrderManagementApp.Domain.Entities;
 using OrderManagementApp.Domain.Interfaces;
+using System.Linq;
 
 namespace OrderManagementApp.Persistence.Repository
 {
@@ -30,9 +31,17 @@ namespace OrderManagementApp.Persistence.Repository
             return await _orderContext.Orders.Where(o => o.CustomerId == customerId).ToListAsync();
         }
 
-        public async Task<Order> GetOrderById(int id)
+        public async Task<Order?> GetOrderById(int id)
         {
-            return _orderContext.Orders.FirstOrDefault(o => o.Id == id);
+            return await _orderContext.Orders.FirstOrDefaultAsync(o => o.Id == id);
+        }
+
+        public async Task<Order?> GetOrderWithLinesByOrderId(int id)
+        {
+            return await _orderContext
+                            .Orders
+                            .Include(o => o.OrderLines)
+                            .FirstOrDefaultAsync(o => o.Id == id);
         }
 
         public async Task<ICollection<OrderLine>> GetOrderLines(int orderId)
@@ -66,9 +75,9 @@ namespace OrderManagementApp.Persistence.Repository
                     orders = orders.Where(o => o.Date == orderQueryDto.Date.Value);
                 }
 
-                if (orderQueryDto.OrderNumber.HasValue)
+                if (orderQueryDto.OrderNumber is not null)
                 {
-                    orders = orders.Where(o => o.OrderNumber == orderQueryDto.OrderNumber.Value);
+                    orders = orders.Where(o => o.OrderNumber != null && orderQueryDto.OrderNumber.Contains(orderQueryDto.OrderNumber));
                 }
 
                 if (orderQueryDto.Remarks is not null)

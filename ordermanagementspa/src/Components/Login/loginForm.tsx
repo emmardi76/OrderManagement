@@ -12,11 +12,10 @@ const LoginForm = (): JSX.Element => {
   const [user, setUser] = useState({ email: "", password: "" });
   const [msg, setMsg] = useState("");
 
-  const { setToken, setUserId } = useContext(LoginContext);
+  const { handleLogin, setToken, setUserId } = useContext(LoginContext);
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    //e.preventDefault();
     login(user).then((loginResult) => {
       if (loginResult.status === 200) {
         const token = loginResult.data.token;
@@ -24,6 +23,7 @@ const LoginForm = (): JSX.Element => {
         var decodedValue = JSON.parse(window.atob(claims));
         setToken && setToken(token);
         setUserId && setUserId(decodedValue.sub);
+        handleLogin(decodedValue.sub, token);
         //setUserId && setUserId(decodedValue.UserId);
         //handleLogin(decodedValue.UserId, token);
         navigate({ pathname: "/homeview" });
@@ -39,7 +39,6 @@ const LoginForm = (): JSX.Element => {
       [e.target.name]: e.target.value,
       //e.target.name === "password" ? sha1(e.target.value) : e.target.value,
     });
-    console.log(user);
   };
 
   const navigate = useNavigate();

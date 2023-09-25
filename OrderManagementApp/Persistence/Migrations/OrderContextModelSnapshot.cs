@@ -115,9 +115,10 @@ namespace OrderManagementApp.Persistence.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("OrderNumber")
+                    b.Property<string>("OrderNumber")
+                        .IsRequired()
                         .HasMaxLength(10)
-                        .HasColumnType("int");
+                        .HasColumnType("nvarchar(10)");
 
                     b.Property<string>("Remarks")
                         .HasMaxLength(200)

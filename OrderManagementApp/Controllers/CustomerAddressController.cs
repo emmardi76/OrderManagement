@@ -39,10 +39,10 @@ namespace OrderManagementApp.Controllers
             return Ok();
         }
        
-        [HttpDelete(Name = "DeleteCustomerAddress")]
-        public async Task<IActionResult> DeleteCustomerAddress(CustomerAddressDto customerAddressDto)
+        [HttpDelete("{customerAddressId}", Name = "DeleteCustomerAddress")]
+        public async Task<IActionResult> DeleteCustomerAddress(int customerAddressId)
         {
-            await _customerAddressService.DeleteCustomerAddress(customerAddressDto);
+            await _customerAddressService.DeleteCustomerAddress(customerAddressId);
             return Ok();
         }
     }
