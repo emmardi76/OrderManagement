@@ -1,24 +1,25 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Customer } from "../../Models/Customer";
-import { CustomerQuery } from "../../Models/CustomerQuery";
-import { getCustomers } from "../Services/customerServices";
+import { User } from "../../Models/User";
+import { UserQuery } from "../../Models/UserQuery";
+import { getUsers } from "../Services/userServices";
 import { Button, Container, Icon, TextField } from "@mui/material";
-import { Close, ArrowBack, Search } from "@mui/icons-material";
-import CustomerSearchView from "./customerSearchView";
+import { ArrowBack, Close, Search } from "@mui/icons-material";
+import UserSearchView from "./userSearchView";
 
-const CustomerSearchForm = (): JSX.Element => {
-  const [search, setSearch] = useState<CustomerQuery | undefined>();
+export const UserSearchForm = (): JSX.Element => {
+  const [search, setSearch] = useState<UserQuery | undefined>();
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const navigate = useNavigate();
 
-  const [customers, setCustomers] = useState<Customer[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
 
   const handleSearch = async () => {
-    const { data: customers } = await getCustomers(search);
-    setCustomers(customers);
+    const { data: users } = await getUsers(search);
+    setUsers(users);
   };
 
-  // Initial search.
+  //Initial search
   useEffect(() => {
     handleSearch();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -30,26 +31,26 @@ const CustomerSearchForm = (): JSX.Element => {
         <div className="searchFieldPanel">
           <TextField
             className="searchField"
-            name="firsttName"
+            name="firstName"
             value={search?.firstName ?? ""}
             onChange={(e) =>
               setSearch({ ...search, firstName: e.target.value })
             }
-            placeholder="Search by firstname of customer"
+            placeholder="Search by user first name"
           />
           <TextField
             className="searchField"
             name="lastName"
             value={search?.lastName ?? ""}
             onChange={(e) => setSearch({ ...search, lastName: e.target.value })}
-            placeholder="Search by lastname of customer"
+            placeholder="Search by user last name"
           />
           <TextField
             className="searchField"
             name="email"
             value={search?.email ?? ""}
             onChange={(e) => setSearch({ ...search, email: e.target.value })}
-            placeholder="Search by email of customer"
+            placeholder="Search by user email"
           />
           <TextField
             className="searchField"
@@ -58,7 +59,7 @@ const CustomerSearchForm = (): JSX.Element => {
             onChange={(e) =>
               setSearch({ ...search, phoneNumber: e.target.value })
             }
-            placeholder="Search by phoneNumber of customer"
+            placeholder="Search by user phonenumber"
           />
         </div>
         <div className="searchButtonsPanel">
@@ -80,7 +81,11 @@ const CustomerSearchForm = (): JSX.Element => {
             onClick={() => setSearch({})}
             style={{ cursor: "pointer" }}
           >
-            <Icon color="action">
+            <Icon
+              color="action"
+              onClick={() => setSearch({})}
+              style={{ cursor: "pointer" }}
+            >
               <Close />
             </Icon>
             Clean
@@ -99,9 +104,7 @@ const CustomerSearchForm = (): JSX.Element => {
           </Button>
         </div>
       </div>
-      <CustomerSearchView customers={customers}></CustomerSearchView>
+      <UserSearchView users={users}></UserSearchView>
     </Container>
   );
 };
-
-export default CustomerSearchForm;

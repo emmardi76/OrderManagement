@@ -19,5 +19,6 @@ namespace OrderManagementApp.Domain.Interfaces
         Task<bool> Save();
         Task<ICollection<CustomerAddress>> GetCustomerAddressById(int id);
         Task<ICollection<Order>> GetCustomerOrdersById(int id);
+        Task<ICollection<Customer>> SearchCustomer(string? param);
     }
 }

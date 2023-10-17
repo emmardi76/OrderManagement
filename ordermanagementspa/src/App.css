@@ -1,16 +1,17 @@
+.cleanFix {
+  clear: both;
+  float: none;
+}
+
 .App {
   text-align: center;
 }
 
 .App-logo {
-  height: 5vmin;
   pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    /*animation: App-logo-spin infinite 20s linear;*/
-  }
+  float: left;
+  margin-top: 6px;
+  margin-left: 6px;
 }
 
 .App-header {
@@ -21,14 +22,25 @@
   width: 100%;
   text-align: center;
   box-shadow: 0px 1px 12px -2px #000;
-  /*min-height: 100vh;*/
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: justify;
   font-size: calc(10px + 2vmin);
   color: white;
 }
+
+.hide {
+  display: none;
+}
+
+#title {
+  line-height: 57px;
+}
+
+#logout {
+  margin-top: 9px;
+  float: right;
+  margin-right: 6px;
+  background-color: cadetblue;
+}
+
 h1 {
   color: black;
   margin-top: 0px;
@@ -36,6 +48,53 @@ h1 {
 
 .App-link {
   color: #61dafb;
+}
+
+.App-body {
+  height: 87vh;
+}
+
+.menubar {
+  display: inline-block;
+}
+
+#loginForm {
+  position: relative;
+  top: 16vh;
+}
+
+#loginTitle {
+  background-color: #5b867c;
+  color: white;
+  line-height: 60px;
+  font-size: 30px;
+  border-radius: 6px;
+  animation: loginTitleAnimation 5s linear;
+}
+
+@keyframes loginTitleAnimation {
+  0% {
+    background-color: #5b867c;
+    color: white;
+  }
+
+  50% {
+    background-color: cyan;
+    color: black;
+    letter-spacing: 4px;
+  }
+  100% {
+    background-color: #5b867c;
+    color: white;
+    left: 0px;
+    letter-spacing: 0px;
+  }
+}
+
+.loginIcon {
+  position: relative;
+  display: inline;
+  top: 16px;
 }
 
 .App-footer {
@@ -46,13 +105,28 @@ h1 {
   text-align: center;
   margin: 0px;
 }
+
+#copyright {
+  line-height: 60px;
+  font-size: 18px;
+}
+
+#footer-icons {
+  position: relative;
+  display: inline;
+  top: 5px;
+}
+
+.footer-icon {
+  margin-left: 20px;
+  margin-top: 5px;
+}
+
 p {
   color: blue;
-  padding: 10px;
 }
 
 nav {
-  float: left; /* Desplazamos el nav hacia la izquierda */
   background-color: "#5b867c";
   max-width: "max-width";
 }
@@ -81,11 +155,97 @@ nav ul li:hover {
   background: #3e7bad;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+nav ul li:hover a {
+  color: white;
+}
+
+/*Format forms*/
+.formFields {
+  width: 100%;
+  display: inline-flex;
+  margin-top: 20px;
+  padding-top: 10px;
+  padding-bottom: 5px;
+  border: 2px solid #f0eeee;
+  border-radius: 5px;
+}
+
+.formFieldPanel {
+  float: left;
+  width: 80%;
+}
+
+.formField {
+  width: 48%;
+  margin-left: 10px !important;
+  margin-bottom: 10px !important;
+}
+
+.formButtonsPanel {
+  width: 15%;
+  display: inline-grid;
+  margin-left: 4.6%;
+}
+
+.formButton {
+  margin-bottom: 5px !important;
+}
+
+/*Format search forms*/
+.searchFields {
+  width: 100%;
+  display: inline-flex;
+  margin-top: 20px;
+  padding-top: 10px;
+  padding-bottom: 5px;
+  border: 2px solid #f0eeee;
+  border-radius: 5px;
+}
+
+.searchFieldPanel {
+  float: left;
+  width: 80%;
+}
+
+.searchField {
+  width: 48%;
+  margin-left: 10px !important;
+  margin-bottom: 10px !important;
+}
+
+.searchButtonsPanel {
+  width: 15%;
+  display: inline-grid;
+  margin-left: 4.6%;
+}
+
+.searchButton {
+  margin-bottom: 5px !important;
+}
+
+.searchViewAddButton {
+  margin-top: 5px !important;
+  float: right;
+  margin-right: 5px !important;
+  width: 15%;
+}
+
+.searchView {
+  margin-top: 10px;
+  border: 2px solid #f0eeee;
+  border-radius: 5px;
+  margin-right: -3px;
+  min-height: 65vh;
+}
+
+.searchViewTitle {
+  padding-top: 10px;
+  margin-left: 5px;
+  float: left;
+  font-weight: bold;
+}
+
+.searchViewDataGrid {
+  margin: 5px !important;
+  min-height: 60vh !important;
 }

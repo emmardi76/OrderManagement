@@ -9,6 +9,7 @@ import Button from "@mui/material/Button";
 
 const RegisterForm = () => {
   const [user, setUser] = useState({
+    id: 0,
     firstName: "",
     lastName: "",
     email: "",

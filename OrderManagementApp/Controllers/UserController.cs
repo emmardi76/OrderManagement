@@ -46,7 +46,7 @@ namespace OrderManagementApp.Controllers
             return Ok(await _userService.ExistUser(firstName, lastName));
         }
         
-        [HttpGet]
+        [HttpGet("GetUsers")]
         public async Task<IActionResult> GetUsers([FromQuery] UserQueryDto userQueryDto)
         {
             return Ok(await _userService.GetUsers(userQueryDto));

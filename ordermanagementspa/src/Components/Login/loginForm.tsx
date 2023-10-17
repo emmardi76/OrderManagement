@@ -1,4 +1,4 @@
-import React, { useState, useContext, FormEvent } from "react";
+import React, { useState, useContext, FormEvent, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Container from "@mui/material/Container";
 import Icon from "@mui/material/Icon";
@@ -7,8 +7,11 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { login } from "../Services/userServices";
 import { LoginContext } from "../Context/loginContext";
+interface LoginFormProps {
+  hideHeader?: (hide: boolean) => void;
+}
 
-const LoginForm = (): JSX.Element => {
+const LoginForm = ({ hideHeader }: LoginFormProps): JSX.Element => {
   const [user, setUser] = useState({ email: "", password: "" });
   const [msg, setMsg] = useState("");
 
@@ -26,6 +29,7 @@ const LoginForm = (): JSX.Element => {
         handleLogin(decodedValue.sub, token);
         //setUserId && setUserId(decodedValue.UserId);
         //handleLogin(decodedValue.UserId, token);
+        hideHeader && hideHeader(false);
         navigate({ pathname: "/homeview" });
       } else {
         setMsg("The credentials aren´t correct, try again.");
@@ -43,12 +47,17 @@ const LoginForm = (): JSX.Element => {
 
   const navigate = useNavigate();
 
+  useEffect(() => {
+    hideHeader && hideHeader(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
-    <Container>
+    <Container id="loginForm">
       <form onSubmit={handleSubmit}>
-        <h2 style={{ color: "grey" }}>Order Management</h2>
+        <h2 id="loginTitle">Order Management</h2>
         <h2>Welcome</h2>
-        <Icon color="action">
+        <Icon color="action" className="loginIcon">
           <MailOutline />
         </Icon>
         &nbsp;
@@ -64,7 +73,7 @@ const LoginForm = (): JSX.Element => {
         />
         <br />
         <br />
-        <Icon color="action">
+        <Icon color="action" className="loginIcon">
           <VpnKey />
         </Icon>
         &nbsp;

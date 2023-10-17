@@ -49,45 +49,53 @@ const TaxTypeForm = ({ taxType, onClose }: TaxTypeFormProps): JSX.Element => {
   return (
     <Container>
       <form onSubmit={handleSubmit}>
-        <br />
-        <TextField
-          label="Name"
-          focused
-          type="name"
-          name="name"
-          value={editTaxType?.name}
-          onChange={(e: { target: { name: string; value: string } }) =>
-            handleChange(e)
-          }
-          placeholder="Write the name of tax"
-          style={{ width: 300 }}
-        />
-        <br />
-        <br />
-        <TextField
-          label="TaxPercentage"
-          focused
-          type="taxPercentage"
-          name="taxPercentage"
-          value={editTaxType?.taxPercentage}
-          onChange={(e) => handleChange(e)}
-          placeholder="Write your tax percentage"
-          style={{ width: 300 }}
-        />
-        <br />
-        <br />
-        <Button type="submit" variant="contained" color="primary">
-          Save
-        </Button>
-        &nbsp;
-        <Button
-          type="button"
-          variant="contained"
-          color="primary"
-          onClick={onClose}
-        >
-          Cancel
-        </Button>
+        <div className="formFields">
+          <div className="formFieldPanel">
+            <TextField
+              className="formField"
+              label="Name"
+              focused
+              type="name"
+              name="name"
+              value={editTaxType?.name}
+              onChange={(e: { target: { name: string; value: string } }) =>
+                handleChange(e)
+              }
+              placeholder="Write the name of tax"
+              style={{ width: 300 }}
+            />
+            <TextField
+              className="formField"
+              label="TaxPercentage"
+              focused
+              type="taxPercentage"
+              name="taxPercentage"
+              value={editTaxType?.taxPercentage}
+              onChange={(e) => handleChange(e)}
+              placeholder="Write your tax percentage"
+              style={{ width: 300 }}
+            />
+          </div>
+          <div className="formButtonsPanel">
+            <Button
+              className="formButton"
+              type="submit"
+              variant="contained"
+              color="primary"
+            >
+              Save
+            </Button>
+            <Button
+              className="formButton"
+              type="button"
+              variant="contained"
+              color="primary"
+              onClick={onClose}
+            >
+              Cancel
+            </Button>
+          </div>
+        </div>
       </form>
     </Container>
   );

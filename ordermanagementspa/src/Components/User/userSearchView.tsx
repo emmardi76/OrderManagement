@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { Customer } from "../../Models/Customer";
-import { deleteCustomer } from "../Services/customerServices";
-import { Stack, Button, Icon, Box } from "@mui/material";
-import { Add } from "@mui/icons-material";
+import { User } from "../../Models/User";
+import UserFormDialog from "./userFormDialog";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import CustomerFormDialog from "./customerFormDialog";
+import { Button, Icon, Stack } from "@mui/material";
+import { Add } from "@mui/icons-material";
+import { deleteUser } from "../Services/userServices";
 
-interface CustomerSearchViewProps {
-  customers: Customer[];
+interface UserSearchViewProps {
+  users: User[];
 }
 
-let defaultCustomer: Customer = {
+let defaultUser: User = {
   id: 0,
   firstName: "",
   lastName: "",
@@ -18,11 +18,9 @@ let defaultCustomer: Customer = {
   phoneNumber: "",
 };
 
-const CustomerSearchView = ({
-  customers,
-}: CustomerSearchViewProps): JSX.Element => {
-  const [currentCustomer, setCurrentCustomer] = useState<Customer>();
-  const columns: GridColDef<Customer>[] = [
+const UserSearchView = ({ users }: UserSearchViewProps): JSX.Element => {
+  const [currentUser, setCurrentUser] = useState<User>();
+  const columns: GridColDef<User>[] = [
     {
       field: `id`,
       headerName: `ID`,
@@ -41,12 +39,12 @@ const CustomerSearchView = ({
       renderCell: (params) => {
         const onClickEdit = () => {
           const currentRow = params.row;
-          setCurrentCustomer(currentRow);
+          setCurrentUser(currentRow);
         };
 
         const onClickDelete = () => {
           const currentRow = params.row;
-          return deleteCustomer(currentRow.id);
+          return deleteUser(currentRow.id);
         };
 
         return (
@@ -73,17 +71,17 @@ const CustomerSearchView = ({
     },
   ];
 
-  const [openCustomerForm, setOpenCustomerForm] = useState(false);
+  const [openUserForm, setOpenUserForm] = useState(false);
 
   useEffect(() => {
-    if (currentCustomer) {
-      setOpenCustomerForm(true);
+    if (currentUser) {
+      setOpenUserForm(true);
     }
-  }, [currentCustomer, setOpenCustomerForm]);
+  }, [currentUser, setOpenUserForm]);
 
   const handleClose = () => {
-    setOpenCustomerForm(false);
-    setCurrentCustomer(undefined);
+    setOpenUserForm(false);
+    setCurrentUser(undefined);
   };
 
   return (
@@ -94,7 +92,7 @@ const CustomerSearchView = ({
         variant="contained"
         color="primary"
         onClick={() => {
-          setCurrentCustomer(defaultCustomer);
+          setCurrentUser(defaultUser);
         }}
       >
         <Icon color="action">
@@ -106,7 +104,7 @@ const CustomerSearchView = ({
 
       <DataGrid
         className="searchViewDataGrid"
-        rows={customers}
+        rows={users}
         columns={columns}
         initialState={{
           pagination: {
@@ -116,13 +114,13 @@ const CustomerSearchView = ({
         pageSizeOptions={[5, 10]}
       ></DataGrid>
 
-      <CustomerFormDialog
-        customer={currentCustomer ?? defaultCustomer}
-        open={openCustomerForm}
+      <UserFormDialog
+        user={currentUser ?? defaultUser}
+        open={openUserForm}
         onClose={handleClose}
-      ></CustomerFormDialog>
+      ></UserFormDialog>
     </div>
   );
 };
 
-export default CustomerSearchView;
+export default UserSearchView;

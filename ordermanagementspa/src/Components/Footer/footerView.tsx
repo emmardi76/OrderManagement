@@ -1,17 +1,19 @@
 import { Email, Facebook } from "@mui/icons-material";
-import { Icon } from "@mui/material";
+import { Box, Icon } from "@mui/material";
 
 const FooterView = () => {
   return (
     <footer>
-      <p>OrderManagementApp - Copyright</p>
-      <Icon>
-        <Email />
-      </Icon>
-      &nbsp;&nbsp;&nbsp;&nbsp;
-      <Icon>
-        <Facebook />
-      </Icon>
+      <span id="copyright">OrderManagementApp - Copyright</span>
+      <Box id="footer-icons">
+        <Icon className="footer-icon">
+          <Email />
+        </Icon>
+
+        <Icon className="footer-icon">
+          <Facebook />
+        </Icon>
+      </Box>
     </footer>
   );
 };

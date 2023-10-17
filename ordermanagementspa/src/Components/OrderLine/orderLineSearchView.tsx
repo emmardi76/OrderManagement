@@ -25,16 +25,16 @@ const OrderLineSearchView = ({
       headerName: `ID`,
       width: 70,
     },
-    { field: `orderId`, headerName: `ORDERID`, width: 20 },
-    { field: `productId`, headerName: `PRODUCTID`, width: 20 },
+    { field: `orderId`, headerName: `ORDERID`, width: 200 },
+    { field: `productId`, headerName: `PRODUCTID`, width: 200 },
     { field: `name`, headerName: `NAME`, width: 500 },
-    { field: `quantity`, headerName: `QUANTITY`, width: 20 },
-    { field: `taxTypeId`, headerName: `TAXTYPEID`, width: 20 },
-    { field: `taxPercentage`, headerName: `TAXPERCENTAGE`, width: 20 },
-    { field: `unitPrice`, headerName: `UNITPRICE`, width: 20 },
-    { field: `totalWithoutTaxes`, headerName: `TOTALWITHOUTTAXES`, width: 20 },
-    { field: `total`, headerName: `TOTAL`, width: 20 },
-    { field: `totalTaxes`, headerName: `TOTALTAXES`, width: 20 },
+    { field: `quantity`, headerName: `QUANTITY`, width: 200 },
+    { field: `taxTypeId`, headerName: `TAXTYPEID`, width: 200 },
+    { field: `taxPercentage`, headerName: `TAXPERCENTAGE`, width: 200 },
+    { field: `unitPrice`, headerName: `UNITPRICE`, width: 200 },
+    { field: `totalWithoutTaxes`, headerName: `TOTALWITHOUTTAXES`, width: 200 },
+    { field: `total`, headerName: `TOTAL`, width: 200 },
+    { field: `totalTaxes`, headerName: `TOTALTAXES`, width: 200 },
     {
       field: "action",
       headerName: "Action",
@@ -113,11 +113,10 @@ const OrderLineSearchView = ({
   };
 
   return (
-    <>
-      <br></br>
-      <h2>Results of the search order Line</h2>
-      &nbsp;
+    <div className="searchView">
+      <span className="searchViewTitle">Results of the search order Line</span>
       <Button
+        className="searchViewAddButton"
         variant="contained"
         color="primary"
         onClick={() => {
@@ -129,25 +128,26 @@ const OrderLineSearchView = ({
         </Icon>
         Add
       </Button>
-      <Box sx={{ width: "100%" }}>
-        <DataGrid
-          autoHeight
-          rows={orderLines}
-          columns={columns}
-          initialState={{
-            pagination: {
-              paginationModel: { page: 0, pageSize: 5 },
-            },
-          }}
-          pageSizeOptions={[5, 10]}
-        ></DataGrid>
-      </Box>
+      <div className="cleanFix"></div>
+
+      <DataGrid
+        className="searchViewDataGrid"
+        rows={orderLines}
+        columns={columns}
+        initialState={{
+          pagination: {
+            paginationModel: { page: 0, pageSize: 5 },
+          },
+        }}
+        pageSizeOptions={[5, 10]}
+      ></DataGrid>
+
       <OrderLineFormDialog
         orderLine={currentOrderLine ?? defaultOrderLine}
         open={openOrderLineForm}
         onClose={handleClose}
       ></OrderLineFormDialog>
-    </>
+    </div>
   );
 };
 

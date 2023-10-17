@@ -81,70 +81,72 @@ const CustomerForm = ({
   return (
     <Container>
       <form onSubmit={handleSubmit}>
-        <div>This is the customer Form</div>
-        <br />
-        <TextField
-          label="FirstName"
-          focused
-          type="firstName"
-          name="firsttName"
-          value={editCustomer?.firstName}
-          onChange={(e: { target: { name: string; value: string } }) =>
-            handleChange(e)
-          }
-          placeholder="Write the firstname of customer"
-          style={{ width: 300 }}
-        />
-        <br />
-        <br />
-        <TextField
-          label="LastName"
-          focused
-          type="lastName"
-          name="lastName"
-          value={editCustomer?.lastName}
-          onChange={(e) => handleChange(e)}
-          placeholder="Write the lastname of customer"
-          style={{ width: 300 }}
-        />
-        <br />
-        <br />
-        <TextField
-          label="Email"
-          focused
-          type="email"
-          name="email"
-          value={editCustomer?.email}
-          onChange={(e) => handleChange(e)}
-          placeholder="Write the email of customer"
-          style={{ width: 300 }}
-        />
-        <br />
-        <br />
-        <TextField
-          label="PhoneNumber"
-          focused
-          type="phonenumber"
-          name="phoneNumber"
-          value={editCustomer?.phoneNumber}
-          onChange={(e) => handleChange(e)}
-          placeholder="Write the phonenumber of customer"
-          style={{ width: 300 }}
-        />
-        <br />
-        <br />
-        <Button type="submit" variant="contained" color="primary">
-          Save
-        </Button>
-        &nbsp;
-        <Button
-          type="button"
-          variant="contained"
-          color="primary"
-          onClick={onClose}
-        >
-          Cancel
-        </Button>
+        <div className="formFields">
+          <div className="formFieldPanel">
+            <TextField
+              className="formField"
+              label="FirstName"
+              focused
+              type="firstName"
+              name="firsttName"
+              value={editCustomer?.firstName}
+              onChange={(e: { target: { name: string; value: string } }) =>
+                handleChange(e)
+              }
+              placeholder="Write the firstname of customer"
+            />
+            <TextField
+              className="formField"
+              label="LastName"
+              focused
+              type="lastName"
+              name="lastName"
+              value={editCustomer?.lastName}
+              onChange={(e) => handleChange(e)}
+              placeholder="Write the lastname of customer"
+            />
+            <TextField
+              className="formField"
+              label="Email"
+              focused
+              type="email"
+              name="email"
+              value={editCustomer?.email}
+              onChange={(e) => handleChange(e)}
+              placeholder="Write the email of customer"
+            />
+            <TextField
+              className="formField"
+              label="PhoneNumber"
+              focused
+              type="phonenumber"
+              name="phoneNumber"
+              value={editCustomer?.phoneNumber}
+              onChange={(e) => handleChange(e)}
+              placeholder="Write the phonenumber of customer"
+            />
+          </div>
+          <div className="formButtonsPanel">
+            <Button
+              className="formButton"
+              type="submit"
+              variant="contained"
+              color="primary"
+            >
+              Save
+            </Button>
+            <Button
+              className="formButton"
+              type="button"
+              variant="contained"
+              color="primary"
+              onClick={onClose}
+            >
+              Cancel
+            </Button>
+          </div>
+        </div>
+
         {/*grid de customer addrees*/}
         {customer && (
           <CustomerAddressSearchView

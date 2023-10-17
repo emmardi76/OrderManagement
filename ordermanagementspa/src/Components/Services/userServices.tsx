@@ -1,6 +1,10 @@
 import axios from "./axiosServices";
 import { RegisterUser } from "../../Models/RegisterUser";
 import { LoginUser } from "../../Models/LoginUser";
+import { User } from "../../Models/User";
+import { AxiosResponse } from "axios";
+import { UserQuery } from "../../Models/UserQuery";
+import service from "./axiosServices";
 
 export function register(user: RegisterUser) {
   //return axios.post(`User/RegisterUser&password=${user.password}`, user);
@@ -18,4 +22,24 @@ export function getUser(): number {
     userId = parseInt(userIdString);
   }
   return userId;
+}
+
+export function getUsers(search?: UserQuery): Promise<AxiosResponse<User[]>> {
+  let url = "User/GetUsers";
+  if (search) {
+    var queryParameters = Object.entries(search)
+      .map((e) => e.join("="))
+      .join("&");
+
+    url = `${url}?${queryParameters}`;
+  }
+  return service.get(url);
+}
+
+export function updateUser(user: User): Promise<AxiosResponse<User>> {
+  return axios.put("User", user);
+}
+
+export function deleteUser(id: number): Promise<AxiosResponse<User>> {
+  return axios.delete(`User/${id}`);
 }

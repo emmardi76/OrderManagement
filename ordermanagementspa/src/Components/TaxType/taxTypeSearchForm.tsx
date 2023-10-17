@@ -20,71 +20,84 @@ export const TaxTypeSearchForm = (): JSX.Element => {
     setTaxTypes(taxtypes);
   };
 
+  // Initial search.
+  useEffect(() => {
+    handleSearch();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <Container>
-      <nav>
-        <TextField
-          name="name"
-          value={search?.name ?? ""}
-          onChange={(e) => setSearch({ ...search, name: e.target.value })}
-          placeholder="Search by taxType name"
-          style={{ width: 300 }}
-        />
-        <TextField
-          name="taxPercentage"
-          type="number"
-          value={search?.taxPercentage ?? ""}
-          onChange={(e) => {
-            const value = parseFloat(e.target.value);
-            if (isNaN(value)) {
-              setSearch({
-                ...search,
-                taxPercentage: undefined,
-              });
-            } else {
-              setSearch({
-                ...search,
-                taxPercentage: parseFloat(e.target.value),
-              });
-            }
-          }}
-          placeholder="Search by tax percentage"
-          style={{ width: 300 }}
-        />
-        <Icon
-          color="action"
-          onClick={() => setSearch({})}
-          style={{ cursor: "pointer" }}
-        >
-          <Close />
-        </Icon>
-        <Button
-          variant="contained"
-          onClick={() => {
-            // navigate({ pathname: `/taxType/searchTaxTypeView/${search}` });
-            handleSearch();
-          }}
-        >
-          <Icon color="action">
-            <Search />
-          </Icon>
-          Search
-        </Button>
-        &nbsp;
-        <Button
-          variant="contained"
-          onClick={() => {
-            navigate({ pathname: "/HomeView " });
-          }}
-        >
-          <Icon color="action">
-            <ArrowBack />
-          </Icon>
-          Back
-        </Button>
-        &nbsp;
-      </nav>
-      <br></br>
+      <div className="searchFields">
+        <div className="searchFieldPanel">
+          <TextField
+            className="searchField"
+            name="name"
+            value={search?.name ?? ""}
+            onChange={(e) => setSearch({ ...search, name: e.target.value })}
+            placeholder="Search by taxType name"
+          />
+          <TextField
+            className="searchField"
+            name="taxPercentage"
+            type="number"
+            value={search?.taxPercentage ?? ""}
+            onChange={(e) => {
+              const value = parseFloat(e.target.value);
+              if (isNaN(value)) {
+                setSearch({
+                  ...search,
+                  taxPercentage: undefined,
+                });
+              } else {
+                setSearch({
+                  ...search,
+                  taxPercentage: parseFloat(e.target.value),
+                });
+              }
+            }}
+            placeholder="Search by tax percentage"
+          />
+        </div>
+        <div className="searchButtonsPanel">
+          <Button
+            className="searchButton"
+            variant="contained"
+            onClick={() => {
+              // navigate({ pathname: `/taxType/searchTaxTypeView/${search}` });
+              handleSearch();
+            }}
+          >
+            <Icon color="action">
+              <Search />
+            </Icon>
+            Search
+          </Button>
+          <Button
+            className="searchButton"
+            variant="contained"
+            onClick={() => setSearch({})}
+            style={{ cursor: "pointer" }}
+          >
+            <Icon color="action">
+              <Close />
+            </Icon>
+            Clean
+          </Button>
+          <Button
+            className="searchButton"
+            variant="contained"
+            onClick={() => {
+              navigate({ pathname: "/HomeView " });
+            }}
+          >
+            <Icon color="action">
+              <ArrowBack />
+            </Icon>
+            Back
+          </Button>
+        </div>
+      </div>
       <SearchTaxTypeView taxTypes={taxTypes}></SearchTaxTypeView>
     </Container>
   );

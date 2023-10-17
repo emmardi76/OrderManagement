@@ -48,9 +48,19 @@ namespace OrderManagementApp.Application.Services
 
         public async Task DeleteOrderLine(int orderLineId)
         {
-            var orderLine = await GetOrderLineById(orderLineId);            
+            var orderLine = await GetOrderLineById(orderLineId);
 
-            _orderLineRepository.DeleteOrderLine(orderLine);
+            var order = await _orderRepository.GetOrderWithLinesByOrderId(orderLine.OrderId);
+
+            if (order == null)
+            {
+                throw new InvalidOperationException($"The order {orderLine.OrderId} does not exist.");
+            }
+          
+            order.OrderLines.Remove(orderLine);
+
+            _orderService.SetOrderTotals(order);
+
             await _orderLineRepository.Save();
         }
 
@@ -63,15 +73,28 @@ namespace OrderManagementApp.Application.Services
 
         public async Task UpdateOrderLine(OrderLineDto orderLineDto)
         {
-            var listOrderLine = await _orderLineRepository.GetOrderLines(orderLineDto.OrderId);
+            var order = await _orderRepository.GetOrderWithLinesByOrderId(orderLineDto.OrderId);
 
-            if (listOrderLine.First(ol => ol.Id == orderLineDto.Id) == null)
+            if (order == null)
             {
-                throw new InvalidOperationException($"The orderLine with id {orderLineDto.Id} does not exist.");
+                throw new InvalidOperationException($"The order {orderLineDto.OrderId} does not exist.");
             }
 
-            var orderline = new OrderLine();
-            _mapper.Map(orderLineDto, orderline);
+            var orderLine = order.OrderLines.FirstOrDefault(x => x.Id == orderLineDto.Id);
+            if (orderLine == null) 
+            {
+                throw new InvalidOperationException($"The order line {orderLineDto.Id} does not exist.");
+            }
+
+            _mapper.Map(orderLineDto, orderLine);
+
+            orderLine.TotalWithoutTaxes = Math.Round(orderLine.Quantity * orderLine.UnitPrice, 2);
+            orderLine.TotalTaxes = Math.Round(orderLine.TotalWithoutTaxes * (orderLine.TaxPercentage / 100), 2);
+            orderLine.Total = Math.Round(orderLine.TotalWithoutTaxes + orderLine.TotalTaxes, 2);
+
+
+            _orderService.SetOrderTotals(order);
+
             await _orderLineRepository.Save();
         }
 

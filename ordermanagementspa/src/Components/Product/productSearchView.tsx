@@ -87,11 +87,10 @@ const ProductSearchView = ({
   };
 
   return (
-    <>
-      <br></br>
-      <h2>Results of the search</h2>
-      &nbsp;
+    <div className="searchView">
+      <span className="searchViewTitle">Results of the search</span>
       <Button
+        className="searchViewAddButton"
         variant="contained"
         color="primary"
         onClick={() => {
@@ -103,7 +102,10 @@ const ProductSearchView = ({
         </Icon>
         Add
       </Button>
+      <div className="cleanFix"></div>
+
       <DataGrid
+        className="searchViewDataGrid"
         rows={products}
         columns={columns}
         initialState={{
@@ -113,12 +115,13 @@ const ProductSearchView = ({
         }}
         pageSizeOptions={[5, 10]}
       ></DataGrid>
+
       <ProductFormDialog
         product={currentProduct ?? defaultProduct}
         open={openProductForm}
         onClose={handleClose}
       ></ProductFormDialog>
-    </>
+    </div>
   );
 };
 

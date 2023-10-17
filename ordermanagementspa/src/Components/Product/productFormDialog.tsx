@@ -19,7 +19,7 @@ const ProductFormDialog = ({
   };
 
   return (
-    <Dialog onClose={handleClose} open={open}>
+    <Dialog onClose={handleClose} open={open} maxWidth={"lg"}>
       <DialogTitle>Product Form</DialogTitle>
       <DialogContent>
         <ProductForm product={product} onClose={handleClose}></ProductForm>

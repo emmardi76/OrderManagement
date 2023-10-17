@@ -25,7 +25,7 @@ const TaxTypeFormDialog = ({
   };
 
   return (
-    <Dialog onClose={handleClose} open={open}>
+    <Dialog onClose={handleClose} open={open} maxWidth={"lg"}>
       <DialogTitle>Tax Type Form</DialogTitle>
       <DialogContent>
         <TaxTypeForm taxType={taxType} onClose={handleClose}></TaxTypeForm>

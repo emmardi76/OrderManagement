@@ -18,7 +18,7 @@ const CustomerAddressFormDialog = ({
   };
 
   return (
-    <Dialog onClose={handleClose} open={open}>
+    <Dialog onClose={handleClose} open={open} maxWidth={"lg"}>
       <DialogTitle>Customer Address Form</DialogTitle>
       <DialogContent>
         <CustomerAddressForm

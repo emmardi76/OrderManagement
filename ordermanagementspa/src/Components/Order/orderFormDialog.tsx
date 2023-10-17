@@ -18,7 +18,7 @@ const OrderFormDialog = ({
   };
 
   return (
-    <Dialog onClose={handleClose} open={open}>
+    <Dialog onClose={handleClose} open={open} maxWidth={"lg"}>
       <DialogTitle>Order Form</DialogTitle>
       <DialogContent>
         <OrderForm order={order} onClose={handleClose}></OrderForm>

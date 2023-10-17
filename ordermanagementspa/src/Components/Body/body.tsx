@@ -8,13 +8,17 @@ import { TaxTypeSearchForm } from "../TaxType/taxTypeSearchForm";
 import { ProductSearchForm } from "../Product/productSearchForm";
 import CustomerSearchForm from "../Customer/customerSearchForm";
 import OrderSearchForm from "../Order/orderSearchForm";
+import { UserSearchForm } from "../User/userSearchForm";
 
-export const Body = (): JSX.Element => {
+interface BodyProps {
+  hideHeader?: (hide: boolean) => void;
+}
+export const Body = ({ hideHeader }: BodyProps): JSX.Element => {
   const { userId } = useContext(LoginContext);
   return (
     <>
       <Routes>
-        <Route path="/" element={<LoginForm />} />
+        <Route path="/" element={<LoginForm hideHeader={hideHeader} />} />
         <Route path="/homeview" element={<HomeView />} />
         <Route path="/register" element={<RegisterForm />} />
         <Route
@@ -30,6 +34,7 @@ export const Body = (): JSX.Element => {
           element={<CustomerSearchForm />}
         />
         <Route path="/Order/orderSearchForm" element={<OrderSearchForm />} />
+        <Route path="/User/userSearchForm" element={<UserSearchForm />} />
       </Routes>
     </>
   );

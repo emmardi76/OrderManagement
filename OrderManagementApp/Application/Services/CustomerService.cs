@@ -3,6 +3,7 @@ using OrderManagementApp.Application.Dtos;
 using OrderManagementApp.Application.Services.ServiceInterfaces;
 using OrderManagementApp.Domain.Entities;
 using OrderManagementApp.Domain.Interfaces;
+using OrderManagementApp.Persistence.Repository;
 
 namespace OrderManagementApp.Application.Services
 {
@@ -95,7 +96,14 @@ namespace OrderManagementApp.Application.Services
             }
 
             return ListCustomersDto;
-        }       
+        }
+
+        public async Task<ICollection<CustomerDto>> SearchCustomer(string param)
+        {
+            var customer = await _customerRepository.SearchCustomer(param);
+
+            return _mapper.Map<ICollection<CustomerDto>>(customer);
+        }
 
         public async Task<CustomerDto> UpdateCustomer(CustomerDto customerDto)
         {

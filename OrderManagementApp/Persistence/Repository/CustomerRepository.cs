@@ -1,7 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper.QueryableExtensions;
+using Microsoft.EntityFrameworkCore;
 using OrderManagementApp.Application.Dtos;
 using OrderManagementApp.Domain.Entities;
 using OrderManagementApp.Domain.Interfaces;
+using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace OrderManagementApp.Persistence.Repository
 {
@@ -82,6 +85,20 @@ namespace OrderManagementApp.Persistence.Repository
 
             }
             return await customers.OrderBy(c => c.FirstName).ToListAsync();
+        }
+
+        public async Task<ICollection<Customer>> SearchCustomer(string? param)
+        {
+            var customer =  _orderContext.Customers.AsQueryable<Customer>();
+
+            if (!string.IsNullOrEmpty(param))            {
+
+                //customer =  customer.Where(c => c.FirstName.Contains(param) || c.LastName.Contains(param));
+                customer = customer.Where(c => (c.FirstName+" "+c.LastName).Contains(param));
+            }
+
+            return await customer.OrderBy(c => c.FirstName).ToListAsync();            
+
         }
 
         public async Task<bool> Save()

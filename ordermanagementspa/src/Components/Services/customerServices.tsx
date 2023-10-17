@@ -17,6 +17,13 @@ export function getCustomers(
   }
   return service.get(url);
 }
+
+export function searchCustomer(
+  search?: string
+): Promise<AxiosResponse<Customer[]>> {
+  return service.get("Customer/searchCustomer/" + search);
+}
+
 export function addCustomer(
   customer: Customer
 ): Promise<AxiosResponse<Customer>> {

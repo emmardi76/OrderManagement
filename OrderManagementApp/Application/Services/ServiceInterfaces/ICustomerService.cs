@@ -11,5 +11,6 @@ namespace OrderManagementApp.Application.Services.ServiceInterfaces
         Task DeleteCustomer(int id);       
         Task<ICollection<CustomerAddressDto>> GetCustomerAddressById(int id);
         Task<ICollection<OrderDto>> GetCustomerOrdersById(int id);
+        Task<ICollection<CustomerDto>> SearchCustomer(string param);
     }
 }

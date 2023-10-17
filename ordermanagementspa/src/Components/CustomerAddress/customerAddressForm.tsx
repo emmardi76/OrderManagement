@@ -55,111 +55,102 @@ const CustomerAddressForm = ({
   return (
     <Container>
       <form>
-        <div>This is the customerAddress Form</div>
-        <br />
-        <TextField
-          label="Description"
-          focused
-          type="description"
-          name="description"
-          value={editCustomerAddress?.description}
-          onChange={(e: { target: { name: string; value: string } }) =>
-            handleChange(e)
-          }
-          placeholder="Write the description of customer address"
-          style={{ width: 300 }}
-        />
-        <br />
-        <br />
-        <TextField
-          label="Street"
-          focused
-          type="street"
-          name="street"
-          value={editCustomerAddress?.street}
-          onChange={(e) => handleChange(e)}
-          placeholder="Write the street of customer Address"
-          style={{ width: 500 }}
-        />
-        <br />
-        <br />
-        <TextField
-          label="StreetNumber"
-          focused
-          type="streetNumber"
-          name="streetNumber"
-          value={editCustomerAddress?.streetNumber}
-          onChange={(e) => handleChange(e)}
-          placeholder="Write the streetNumber of customer Address"
-          style={{ width: 15 }}
-        />
-        <br />
-        <br />
-        <TextField
-          label="Door"
-          focused
-          type="door"
-          name="door"
-          value={editCustomerAddress?.door}
-          onChange={(e) => handleChange(e)}
-          placeholder="Write the door of customer Address"
-          style={{ width: 10 }}
-        />
-        <br />
-        <br />
-        <TextField
-          label="ZipCode"
-          focused
-          type="zipCode"
-          name="zipCode"
-          value={editCustomerAddress?.zipCode}
-          onChange={(e) => handleChange(e)}
-          placeholder="Write the zipCode of customer Address"
-          style={{ width: 20 }}
-        />
-        <br />
-        <br />
-        <TextField
-          label="City"
-          focused
-          type="city"
-          name="city"
-          value={editCustomerAddress?.city}
-          onChange={(e) => handleChange(e)}
-          placeholder="Write the city of customer Address"
-          style={{ width: 300 }}
-        />
-        <br />
-        <br />
-        <TextField
-          label="Country"
-          focused
-          type="country"
-          name="country"
-          value={editCustomerAddress?.country}
-          onChange={(e) => handleChange(e)}
-          placeholder="Write the country of customer Address"
-          style={{ width: 300 }}
-        />
-        <br />
-        <br />
-        <Button
-          type="button"
-          variant="contained"
-          color="primary"
-          onClick={onSave}
-        >
-          Save
-        </Button>
-        &nbsp;
-        <Button
-          type="button"
-          variant="contained"
-          color="primary"
-          onClick={onClose}
-        >
-          Cancel
-        </Button>
+        <div className="formFields">
+          <div className="formFieldPanel">
+            <TextField
+              className="formField"
+              label="Description"
+              focused
+              type="description"
+              name="description"
+              value={editCustomerAddress?.description}
+              onChange={(e: { target: { name: string; value: string } }) =>
+                handleChange(e)
+              }
+              placeholder="Write the description of customer address"
+            />
+            <TextField
+              className="formField"
+              label="Street"
+              focused
+              type="street"
+              name="street"
+              value={editCustomerAddress?.street}
+              onChange={(e) => handleChange(e)}
+              placeholder="Write the street of customer Address"
+            />
+            <TextField
+              className="formField"
+              label="StreetNumber"
+              focused
+              type="streetNumber"
+              name="streetNumber"
+              value={editCustomerAddress?.streetNumber}
+              onChange={(e) => handleChange(e)}
+              placeholder="Write the streetNumber of customer Address"
+            />
+            <TextField
+              className="formField"
+              label="Door"
+              focused
+              type="door"
+              name="door"
+              value={editCustomerAddress?.door}
+              onChange={(e) => handleChange(e)}
+              placeholder="Write the door of customer Address"
+            />
+            <TextField
+              className="formField"
+              label="ZipCode"
+              focused
+              type="zipCode"
+              name="zipCode"
+              value={editCustomerAddress?.zipCode}
+              onChange={(e) => handleChange(e)}
+              placeholder="Write the zipCode of customer Address"
+            />
+            <TextField
+              className="formField"
+              label="City"
+              focused
+              type="city"
+              name="city"
+              value={editCustomerAddress?.city}
+              onChange={(e) => handleChange(e)}
+              placeholder="Write the city of customer Address"
+            />
+            <TextField
+              className="formField"
+              label="Country"
+              focused
+              type="country"
+              name="country"
+              value={editCustomerAddress?.country}
+              onChange={(e) => handleChange(e)}
+              placeholder="Write the country of customer Address"
+            />
+          </div>
+          <div className="formButtonsPanel">
+            <Button
+              className="formButton"
+              type="button"
+              variant="contained"
+              color="primary"
+              onClick={onSave}
+            >
+              Save
+            </Button>
+            <Button
+              className="formButton"
+              type="button"
+              variant="contained"
+              color="primary"
+              onClick={onClose}
+            >
+              Cancel
+            </Button>
+          </div>
+        </div>
       </form>
     </Container>
   );

@@ -32,7 +32,7 @@ const OrderSearchView = ({ orders }: OrderSearchViewProps): JSX.Element => {
     },
     { field: `customerId`, headerName: `CUSTOMERID`, width: 20 },
     { field: `customerAddressId`, headerName: `CUSTOMERADDRESSID`, width: 20 },
-    { field: `date`, headerName: `DATE`, width: 100 },
+    { field: `date`, headerName: `DATE`, width: 150 },
     { field: `ordernumber`, headerName: `ORDERNUMBER`, width: 20 },
     { field: `remarks`, headerName: `REMARKS`, width: 500 },
     { field: `totalWithoutTaxes`, headerName: `TOTALWITHOUTTAXES`, width: 20 },
@@ -93,11 +93,10 @@ const OrderSearchView = ({ orders }: OrderSearchViewProps): JSX.Element => {
   };
 
   return (
-    <>
-      <br></br>
-      <h2>Results of the search</h2>
-      &nbsp;
+    <div className="searchView">
+      <span className="searchViewTitle">Results of the search</span>
       <Button
+        className="searchViewAddButton"
         variant="contained"
         color="primary"
         onClick={() => {
@@ -109,25 +108,26 @@ const OrderSearchView = ({ orders }: OrderSearchViewProps): JSX.Element => {
         </Icon>
         Add
       </Button>
-      <Box sx={{ width: "100%" }}>
-        <DataGrid
-          autoHeight
-          rows={orders}
-          columns={columns}
-          initialState={{
-            pagination: {
-              paginationModel: { page: 0, pageSize: 5 },
-            },
-          }}
-          pageSizeOptions={[5, 10]}
-        ></DataGrid>
-      </Box>
+      <div className="cleanFix"></div>
+
+      <DataGrid
+        className="searchViewDataGrid"
+        rows={orders}
+        columns={columns}
+        initialState={{
+          pagination: {
+            paginationModel: { page: 0, pageSize: 5 },
+          },
+        }}
+        pageSizeOptions={[5, 10]}
+      ></DataGrid>
+
       <OrderFormDialog
         order={currentOrder ?? defaultOrder}
         open={openOrderForm}
         onClose={handleClose}
       ></OrderFormDialog>
-    </>
+    </div>
   );
 };
 

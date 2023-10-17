@@ -26,16 +26,16 @@ const CustomerAddressSearchView = ({
       width: 70,
     },
     { field: `customerId`, headerName: `CUSTOMERID`, width: 5 },
-    { field: `description`, headerName: `DESCRIPTION`, width: 300 },
-    { field: `street`, headerName: `STREET`, width: 500 },
-    { field: `streetNumber`, headerName: `STREETNUMBER`, width: 15 },
-    { field: `door`, headerName: `DOOR`, width: 10 },
-    { field: `zipCode`, headerName: `ZIPCODE`, width: 20 },
-    { field: `city`, headerName: `CITY`, width: 300 },
-    { field: `country`, headerName: `COUNTRY`, width: 300 },
+    { field: `description`, headerName: `DESCRIPTION`, width: 125 },
+    { field: `street`, headerName: `STREET`, width: 200 },
+    { field: `streetNumber`, headerName: `NUMBER`, width: 84 },
+    { field: `door`, headerName: `DOOR`, width: 64 },
+    { field: `zipCode`, headerName: `ZIP`, width: 64 },
+    { field: `city`, headerName: `CITY`, width: 100 },
+    { field: `country`, headerName: `COUNTRY`, width: 100 },
     {
       field: "action",
-      headerName: "Action",
+      headerName: "",
       sortable: false,
       width: 180,
 
@@ -109,11 +109,12 @@ const CustomerAddressSearchView = ({
   };
 
   return (
-    <>
-      <br></br>
-      <h2>Results of the search customer addresses</h2>
-      &nbsp;
+    <div className="searchView">
+      <span className="searchViewTitle">
+        Results of the search customer addresses
+      </span>
       <Button
+        className="searchViewAddButton"
         variant="contained"
         color="primary"
         onClick={() => {
@@ -125,25 +126,26 @@ const CustomerAddressSearchView = ({
         </Icon>
         Add
       </Button>
-      <Box sx={{ width: "100%" }}>
-        <DataGrid
-          autoHeight
-          rows={customerAddresses}
-          columns={columns}
-          initialState={{
-            pagination: {
-              paginationModel: { page: 0, pageSize: 5 },
-            },
-          }}
-          pageSizeOptions={[5, 10]}
-        ></DataGrid>
-      </Box>
+      <div className="cleanFix"></div>
+
+      <DataGrid
+        className="searchViewDataGrid"
+        rows={customerAddresses}
+        columns={columns}
+        initialState={{
+          pagination: {
+            paginationModel: { page: 0, pageSize: 5 },
+          },
+        }}
+        pageSizeOptions={[5, 10]}
+      ></DataGrid>
+
       <CustomerAddressFormDialog
         customerAddress={currentCustomerAddress ?? defaultCustomerAddress}
         open={openCustomerAddressForm}
         onClose={handleClose}
       ></CustomerAddressFormDialog>
-    </>
+    </div>
   );
 };
 

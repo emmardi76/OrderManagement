@@ -85,11 +85,10 @@ const SearchTaxTypeView = ({
   };
 
   return (
-    <>
-      <br></br>
-      <h2>Results of the search</h2>
-      &nbsp;
+    <div className="searchView">
+      <span className="searchViewTitle">Results of the search</span>
       <Button
+        className="searchViewAddButton"
         variant="contained"
         color="primary"
         onClick={() => {
@@ -101,7 +100,10 @@ const SearchTaxTypeView = ({
         </Icon>
         Add
       </Button>
+      <div className="cleanFix"></div>
+
       <DataGrid
+        className="searchViewDataGrid"
         rows={taxTypes}
         columns={columns}
         initialState={{
@@ -111,12 +113,13 @@ const SearchTaxTypeView = ({
         }}
         pageSizeOptions={[5, 10]}
       ></DataGrid>
+
       <TaxTypeFormDialog
         taxType={currentTaxType ?? defaultTaxType}
         open={openTaxTypeForm}
         onClose={handleClose}
       ></TaxTypeFormDialog>
-    </>
+    </div>
   );
 };
 

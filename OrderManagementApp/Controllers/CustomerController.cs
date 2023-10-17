@@ -23,7 +23,14 @@ namespace OrderManagementApp.Controllers
         {
             return Ok(await _customerService.GetCustomers(customerQueryDto));
         }
-        
+
+        [AllowAnonymous]
+        [HttpGet("SearchCustomer/{param}")]
+        public async Task<IActionResult> SearchCustomer(string param)
+        {
+            return Ok(await _customerService.SearchCustomer(param));
+        }
+
         [HttpPost(Name = "CreateCustomer")]
         public async Task<IActionResult> CreateCustomer(CustomerDto customerDto)
         {
