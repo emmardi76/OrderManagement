@@ -8,6 +8,7 @@ import { deleteUser } from "../Services/userServices";
 
 interface UserSearchViewProps {
   users: User[];
+  handleSearch: () => Promise<void>;
 }
 
 let defaultUser: User = {
@@ -18,21 +19,19 @@ let defaultUser: User = {
   phoneNumber: "",
 };
 
-const UserSearchView = ({ users }: UserSearchViewProps): JSX.Element => {
+const UserSearchView = ({
+  users,
+  handleSearch,
+}: UserSearchViewProps): JSX.Element => {
   const [currentUser, setCurrentUser] = useState<User>();
   const columns: GridColDef<User>[] = [
-    {
-      field: `id`,
-      headerName: `ID`,
-      width: 70,
-    },
-    { field: `firstName`, headerName: `FIRSTNAME`, width: 200 },
-    { field: `lastName`, headerName: `LASTNAME`, width: 200 },
-    { field: `email`, headerName: `EMAIL`, width: 200 },
-    { field: `phoneNumber`, headerName: `PHONENUMBER`, width: 200 },
+    { field: `firstName`, headerName: `First Name`, width: 200 },
+    { field: `lastName`, headerName: `Last Name`, width: 200 },
+    { field: `email`, headerName: `Email`, width: 200 },
+    { field: `phoneNumber`, headerName: `Phone Number`, width: 200 },
     {
       field: "action",
-      headerName: "Action",
+      headerName: "",
       sortable: false,
       width: 180,
 
@@ -82,6 +81,7 @@ const UserSearchView = ({ users }: UserSearchViewProps): JSX.Element => {
   const handleClose = () => {
     setOpenUserForm(false);
     setCurrentUser(undefined);
+    handleSearch();
   };
 
   return (

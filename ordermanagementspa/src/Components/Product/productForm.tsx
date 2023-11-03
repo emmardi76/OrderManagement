@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Product } from "../../Models/Product";
-import { Button, Container, TextField } from "@mui/material";
+import { Button, Container, MenuItem, Select, TextField } from "@mui/material";
 import { AxiosResponse } from "axios";
 import { addProduct, updateProduct } from "../Services/productServices";
+import { TaxType } from "../../Models/TaxType";
+import { getTaxes } from "../Services/taxTypeServices";
 
 interface ProductFormProps {
   onClose: () => void;
@@ -12,6 +14,17 @@ interface ProductFormProps {
 const ProductForm = ({ product, onClose }: ProductFormProps): JSX.Element => {
   const [editProduct, setProduct] = useState<Product>(product);
   const [msg, setMsg] = useState("");
+
+  const [taxPercentages, setTaxPercentages] = useState<TaxType[]>([]);
+
+  const handleTaxPercentage = async () => {
+    const { data: taxPercentage } = await getTaxes();
+    setTaxPercentages(taxPercentage);
+  };
+
+  useEffect(() => {
+    handleTaxPercentage();
+  }, []);
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
@@ -36,7 +49,6 @@ const ProductForm = ({ product, onClose }: ProductFormProps): JSX.Element => {
   };
 
   const handleChange = (e: { target: { name: string; value: string } }) => {
-    console.log("editProduct", editProduct);
     if (editProduct) {
       setProduct({
         ...editProduct,
@@ -76,15 +88,24 @@ const ProductForm = ({ product, onClose }: ProductFormProps): JSX.Element => {
             />
             <TextField
               className="formField"
-              label="TaxTypeId"
-              focused
-              type="taxtypeId"
-              name="taxtypeId"
-              value={editProduct?.taxTypeId}
-              onChange={(e) => handleChange(e)}
-              placeholder="Write your taxtypeId for the product "
+              select
+              autoFocus
+              label={"TaxType"}
               style={{ width: 300 }}
-            />
+              onChange={(e) => {
+                setProduct({
+                  ...editProduct,
+                  taxTypeId: e.target.value as unknown as number,
+                });
+              }}
+              value={editProduct?.taxTypeId}
+            >
+              {taxPercentages.map((option) => (
+                <MenuItem key={option.taxPercentage} value={option.id}>
+                  {option.name}
+                </MenuItem>
+              ))}
+            </TextField>
             <TextField
               className="formField"
               label="UnitPrice"

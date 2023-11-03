@@ -10,7 +10,6 @@ interface TaxTypeFormProps {
 }
 
 const TaxTypeForm = ({ taxType, onClose }: TaxTypeFormProps): JSX.Element => {
-  console.log(taxType);
   const [editTaxType, setTaxType] = useState<TaxType>(taxType);
   const [msg, setMsg] = useState("");
 
@@ -37,7 +36,6 @@ const TaxTypeForm = ({ taxType, onClose }: TaxTypeFormProps): JSX.Element => {
   };
 
   const handleChange = (e: { target: { name: string; value: string } }) => {
-    console.log("editTaxType", editTaxType);
     if (editTaxType) {
       setTaxType({
         ...editTaxType,

@@ -1,46 +1,88 @@
 import { useEffect, useState } from "react";
 import { Order } from "../../Models/Order";
-import { Box, Button, Icon, Stack } from "@mui/material";
-import { deleteOrder } from "../Services/orderServices";
+import { Button, Icon, Stack } from "@mui/material";
+import { deleteOrder, getOrder } from "../Services/orderServices";
 import { Add } from "@mui/icons-material";
-import { GridColDef, DataGrid } from "@mui/x-data-grid";
+import {
+  GridColDef,
+  DataGrid,
+  GridValueFormatterParams,
+} from "@mui/x-data-grid";
 import OrderFormDialog from "./orderFormDialog";
+import { OrderList } from "../../Models/OrderList";
 
 interface OrderSearchViewProps {
-  orders: Order[];
+  orders: OrderList[];
+  handleSearch: () => Promise<void>;
 }
 
-let defaultOrder: Order = {
+const defaultOrder: Order = {
   id: 0,
   customerId: 0,
   customerAddressId: 0,
   date: new Date(),
-  orderNumber: 0,
+  orderNumber: "",
   remarks: "",
   totalWithoutTaxes: 0,
   total: 0,
   totalTaxes: 0,
 };
 
-const OrderSearchView = ({ orders }: OrderSearchViewProps): JSX.Element => {
-  const [currentOrder, setCurrentOrder] = useState<Order>();
-  const columns: GridColDef<Order>[] = [
+const currencyFormatter = (params: GridValueFormatterParams<number>) => {
+  if (params.value == null) {
+    return "";
+  } else {
+    return params.value.toLocaleString() + " €";
+  }
+};
+
+const dateFormatter = (params: GridValueFormatterParams<Date>) => {
+  if (params.value == null) {
+    return "";
+  } else {
+    const date: Date = new Date(params.value);
+    const formattedValue = date.toLocaleDateString();
+    return formattedValue;
+  }
+};
+
+const OrderSearchView = ({
+  orders,
+  handleSearch,
+}: OrderSearchViewProps): JSX.Element => {
+  const [currentOrder, setCurrentOrder] = useState<OrderList>();
+  const [editOrder, setEditOrder] = useState<Order>();
+
+  const columns: GridColDef<OrderList>[] = [
+    { field: `orderNumber`, headerName: `Order`, width: 100 },
+    { field: `customerName`, headerName: `Customer`, width: 400 },
     {
-      field: `id`,
-      headerName: `ID`,
-      width: 70,
+      field: `date`,
+      headerName: `Date`,
+      width: 150,
+      valueFormatter: dateFormatter,
     },
-    { field: `customerId`, headerName: `CUSTOMERID`, width: 20 },
-    { field: `customerAddressId`, headerName: `CUSTOMERADDRESSID`, width: 20 },
-    { field: `date`, headerName: `DATE`, width: 150 },
-    { field: `ordernumber`, headerName: `ORDERNUMBER`, width: 20 },
-    { field: `remarks`, headerName: `REMARKS`, width: 500 },
-    { field: `totalWithoutTaxes`, headerName: `TOTALWITHOUTTAXES`, width: 20 },
-    { field: `total`, headerName: `TOTAL`, width: 20 },
-    { field: `totaltaxes`, headerName: `TOTALTAXES`, width: 20 },
+    {
+      field: `totalWithoutTaxes`,
+      headerName: `Tax Base`,
+      width: 100,
+      valueFormatter: currencyFormatter,
+    },
+    {
+      field: `totalTaxes`,
+      headerName: `Taxes`,
+      width: 100,
+      valueFormatter: currencyFormatter,
+    },
+    {
+      field: `total`,
+      headerName: `Total`,
+      width: 100,
+      valueFormatter: currencyFormatter,
+    },
     {
       field: "action",
-      headerName: "Action",
+      headerName: "",
       sortable: false,
       width: 180,
 
@@ -50,9 +92,10 @@ const OrderSearchView = ({ orders }: OrderSearchViewProps): JSX.Element => {
           setCurrentOrder(currentRow);
         };
 
-        const onClickDelete = () => {
+        const onClickDelete = async () => {
           const currentRow = params.row;
-          return deleteOrder(currentRow.id);
+          await deleteOrder(currentRow.id);
+          handleSearch();
         };
 
         return (
@@ -83,13 +126,22 @@ const OrderSearchView = ({ orders }: OrderSearchViewProps): JSX.Element => {
 
   useEffect(() => {
     if (currentOrder) {
-      setOpenOrderForm(true);
+      getOrder(currentOrder.id).then((result) => {
+        setEditOrder(result.data);
+      });
     }
   }, [currentOrder, setOpenOrderForm]);
+
+  useEffect(() => {
+    if (editOrder) {
+      setOpenOrderForm(true);
+    }
+  }, [editOrder]);
 
   const handleClose = () => {
     setOpenOrderForm(false);
     setCurrentOrder(undefined);
+    handleSearch();
   };
 
   return (
@@ -100,7 +152,8 @@ const OrderSearchView = ({ orders }: OrderSearchViewProps): JSX.Element => {
         variant="contained"
         color="primary"
         onClick={() => {
-          setCurrentOrder(defaultOrder);
+          setEditOrder({ ...defaultOrder });
+          setOpenOrderForm(true);
         }}
       >
         <Icon color="action">
@@ -123,7 +176,7 @@ const OrderSearchView = ({ orders }: OrderSearchViewProps): JSX.Element => {
       ></DataGrid>
 
       <OrderFormDialog
-        order={currentOrder ?? defaultOrder}
+        order={editOrder ?? defaultOrder}
         open={openOrderForm}
         onClose={handleClose}
       ></OrderFormDialog>

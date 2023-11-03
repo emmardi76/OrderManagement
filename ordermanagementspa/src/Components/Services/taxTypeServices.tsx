@@ -28,6 +28,6 @@ export function updateTaxType(
   return axios.put("TaxType", taxType);
 }
 
-export function deleteTaxType(id: number): Promise<AxiosResponse<TaxType>> {
+export function deleteTax(id: number): Promise<AxiosResponse<TaxType>> {
   return axios.delete(`TaxType/${id}`);
 }

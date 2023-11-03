@@ -54,7 +54,7 @@ namespace OrderManagementApp.Controllers
 
         [AllowAnonymous]
         [HttpPut(Name ="UpdateUser")]
-        public async Task<IActionResult> UpdateUser([FromBody]UserDto user)
+        public async Task<IActionResult> UpdateUser([FromBody] RegisterUserDto user)
         {
             await _userService.UpdateUser(user);            
 

@@ -7,7 +7,13 @@ import { Product } from "../../Models/Product";
 import { useNavigate } from "react-router-dom";
 import ProductSearchView from "./productSearchView";
 
-export const ProductSearchForm = (): JSX.Element => {
+export interface ProductSearchFormProps {
+  onClose?: (product?: Product) => void;
+}
+
+export const ProductSearchForm = ({
+  onClose,
+}: ProductSearchFormProps): JSX.Element => {
   const [search, setSearch] = useState<ProductQuery | undefined>();
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const navigate = useNavigate();
@@ -25,47 +31,56 @@ export const ProductSearchForm = (): JSX.Element => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const [selectedProduct, setSelectedProduct] = useState<Product>();
+  const onSelectProduct = (product: Product) => {
+    setSelectedProduct(product);
+  };
+
   return (
     <Container>
       <div className="searchFields">
         <div className="searchFieldPanel">
-          <TextField
-            className="searchField"
-            name="name"
-            value={search?.name ?? ""}
-            onChange={(e) => setSearch({ ...search, name: e.target.value })}
-            placeholder="Search by product name"
-          />
-          <TextField
-            className="searchField"
-            name="description"
-            value={search?.description ?? ""}
-            onChange={(e) =>
-              setSearch({ ...search, description: e.target.value })
-            }
-            placeholder="Search by product description"
-          />
-          <TextField
-            className="searchField"
-            name="unitPrice"
-            type="number"
-            value={search?.unitPrice ?? ""}
-            onChange={(e) => {
-              const value = parseFloat(e.target.value);
-              if (isNaN(value)) {
-                setSearch({
-                  ...search,
-                  unitPrice: undefined,
-                });
-              } else {
-                setSearch({
-                  ...search,
-                  unitPrice: parseFloat(e.target.value),
-                });
+          <div>
+            <TextField
+              className="searchField"
+              name="name"
+              value={search?.name ?? ""}
+              onChange={(e) => setSearch({ ...search, name: e.target.value })}
+              placeholder="Search by product name"
+            />
+            <TextField
+              className="searchField"
+              name="description"
+              value={search?.description ?? ""}
+              onChange={(e) =>
+                setSearch({ ...search, description: e.target.value })
               }
-            }}
-            placeholder="Search by product unitPrice"
-          />
+              placeholder="Search by product description"
+            />
+          </div>
+          <div className="flex">
+            <TextField
+              className="fullWidthSearchField"
+              name="unitPrice"
+              type="number"
+              value={search?.unitPrice ?? ""}
+              onChange={(e) => {
+                const value = parseFloat(e.target.value);
+                if (isNaN(value)) {
+                  setSearch({
+                    ...search,
+                    unitPrice: undefined,
+                  });
+                } else {
+                  setSearch({
+                    ...search,
+                    unitPrice: parseFloat(e.target.value),
+                  });
+                }
+              }}
+              placeholder="Search by product unitPrice"
+            />
+          </div>
         </div>
         <div className="searchButtonsPanel">
           <Button
@@ -95,7 +110,11 @@ export const ProductSearchForm = (): JSX.Element => {
             className="searchButton"
             variant="contained"
             onClick={() => {
-              navigate({ pathname: "/HomeView " });
+              if (onClose) {
+                onClose(selectedProduct);
+              } else {
+                navigate({ pathname: "/HomeView " });
+              }
             }}
           >
             <Icon color="action">
@@ -105,7 +124,11 @@ export const ProductSearchForm = (): JSX.Element => {
           </Button>
         </div>
       </div>
-      <ProductSearchView products={products}></ProductSearchView>
+      <ProductSearchView
+        products={products}
+        onSelect={onSelectProduct}
+        handleSearch={handleSearch}
+      ></ProductSearchView>
     </Container>
   );
 };

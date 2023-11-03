@@ -1,11 +1,5 @@
 ﻿using OrderManagementApp.Application.Dtos;
 using OrderManagementApp.Domain.Entities;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OrderManagementApp.Domain.Interfaces
 {
@@ -15,7 +9,7 @@ namespace OrderManagementApp.Domain.Interfaces
         Task<Customer> GetCustomerById(int id);
         Customer CreateCustomer(Customer customer);
         void UpdateCustomer(Customer customer);
-        void DeleteCustomerById(int id);
+        void DeleteCustomer(Customer customer);
         Task<bool> Save();
         Task<ICollection<CustomerAddress>> GetCustomerAddressById(int id);
         Task<ICollection<Order>> GetCustomerOrdersById(int id);

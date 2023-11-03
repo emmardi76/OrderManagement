@@ -3,5 +3,6 @@ export interface Product {
   name: string;
   description: string;
   taxTypeId: number;
+  taxPercentage?: number;
   unitPrice: number;
 }

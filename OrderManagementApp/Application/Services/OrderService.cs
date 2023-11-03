@@ -63,13 +63,24 @@ namespace OrderManagementApp.Application.Services
             await _orderRepository.Save();
         }
 
-        public async Task<ICollection<OrderDto>> GetOrders(OrderQueryDto orderQueryDto)
+        public async Task<ICollection<OrderListDto>> GetOrders(OrderQueryDto orderQueryDto)
         {
             var listOrders = await _orderRepository.GetOrders(orderQueryDto);
-            return _mapper.Map<List<OrderDto>>(listOrders);
-        }        
+            return _mapper.Map<List<OrderListDto>>(listOrders);
+        }
 
-        public async Task<OrderDto> UpdateOrder(OrderDto orderDto)
+        public async Task<OrderDto> GetOrder(int id)
+        {
+            var order = await _orderRepository.GetOrderById(id);
+            if (order == null)
+            {
+                throw new InvalidOperationException($"The order with id {id} does not exist.");
+            }
+            return _mapper.Map<OrderDto>(order);
+        }
+
+
+        public async Task<OrderDto> UpdateOrder(OrderUpdateDto orderDto)
         {
             var order = await _orderRepository.GetOrderById(orderDto.Id);
 

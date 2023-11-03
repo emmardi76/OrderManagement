@@ -2,11 +2,6 @@
 using OrderManagementApp.Application.Dtos;
 using OrderManagementApp.Domain.Entities;
 using OrderManagementApp.Domain.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OrderManagementApp.Persistence.Repository
 {
@@ -41,6 +36,22 @@ namespace OrderManagementApp.Persistence.Repository
         }
         */
 
+        public async Task<ICollection<Product>> SearchProduct(string? param)
+        {
+            var product = _orderContext.Products.AsQueryable<Product>();
+
+            if (!string.IsNullOrEmpty(param))
+            {
+                if (param != null)
+                {
+                    product = product.Where(p => p.Name != null &&  p.Name.Contains(param));
+                }                
+            }
+
+            return await product.OrderBy(p => p.Name).ToListAsync();
+
+        }
+
         public async Task<ICollection<Product>> GetProducts(ProductQueryDto productQueryDto)
         {
             var products = _orderContext.Products.AsQueryable<Product>();
@@ -69,7 +80,7 @@ namespace OrderManagementApp.Persistence.Repository
                 
             }
 
-            return await products.OrderBy(t => t.Name).ToListAsync();
+            return await products.Include(p => p.TaxType).OrderBy(t => t.Name).ToListAsync();
         }
 
         public Task<TaxType> GetTaxTypeForProductByProductId(int Id)

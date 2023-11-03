@@ -1,13 +1,14 @@
 import { TaxType } from "../../Models/TaxType";
 import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
 import { Button, Icon, Stack } from "@mui/material";
-import { deleteTaxType } from "../Services/taxTypeServices";
+import { deleteTax } from "../Services/taxTypeServices";
 import { Add } from "@mui/icons-material";
 import { useEffect, useState } from "react";
 import TaxTypeFormDialog from "./taxTypeFormDialog";
 
 interface SearchTaxTypeViewProps {
   taxTypes: TaxType[];
+  onCLose?: () => void;
 }
 
 let defaultTaxType: TaxType = {
@@ -18,19 +19,15 @@ let defaultTaxType: TaxType = {
 
 const SearchTaxTypeView = ({
   taxTypes,
+  onCLose,
 }: SearchTaxTypeViewProps): JSX.Element => {
   const [currentTaxType, setCurrentTaxType] = useState<TaxType>();
   const columns: GridColDef<TaxType>[] = [
-    {
-      field: `id`,
-      headerName: `ID`,
-      width: 70,
-    },
-    { field: `name`, headerName: `NAME`, width: 130 },
-    { field: `taxPercentage`, headerName: `TAXPERCENTAGE`, width: 130 },
+    { field: `name`, headerName: `Name`, width: 130 },
+    { field: `taxPercentage`, headerName: `TaxPercentage`, width: 130 },
     {
       field: "action",
-      headerName: "Action",
+      headerName: "",
       sortable: false,
       width: 180,
 
@@ -42,7 +39,14 @@ const SearchTaxTypeView = ({
 
         const onClickDelete = () => {
           const currentRow = params.row;
-          return deleteTaxType(currentRow.id);
+          onCLose && onCLose();
+          return deleteTax(currentRow.id).then((result) => {
+            if (result.status === 200) {
+              onCLose && onCLose();
+            } else {
+              alert(result.data);
+            }
+          });
         };
 
         // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -82,6 +86,7 @@ const SearchTaxTypeView = ({
   const handleClose = () => {
     setOpenTaxTypeForm(false);
     setCurrentTaxType(undefined);
+    onCLose && onCLose();
   };
 
   return (

@@ -41,7 +41,7 @@ namespace OrderManagementApp.Application.Services
             {
                 throw new InvalidOperationException($"The customer with id {id} does not exist.");
             }
-            _customerRepository.DeleteCustomerById(id);
+            _customerRepository.DeleteCustomer(customer);
             await _customerRepository.Save();
         }
 

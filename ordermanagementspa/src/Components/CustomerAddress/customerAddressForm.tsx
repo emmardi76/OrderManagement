@@ -34,11 +34,9 @@ const CustomerAddressForm = ({
 
       if (result.status === 200) {
         setMsg("The operation is success.");
-        alert(msg);
         onClose();
       } else {
         setMsg("The operation isn´t success, try again.");
-        alert(msg);
       }
     }
   };

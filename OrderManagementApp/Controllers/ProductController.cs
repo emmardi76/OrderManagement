@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OrderManagementApp.Application.Dtos;
+using OrderManagementApp.Application.Services;
 using OrderManagementApp.Application.Services.ServiceInterfaces;
 
 namespace OrderManagementApp.Controllers
@@ -24,6 +25,13 @@ namespace OrderManagementApp.Controllers
             return Ok(await _productService.GetProducts(productQueryDto));
         }
 
+        [AllowAnonymous]
+        [HttpGet("SearchProduct/{param}")]
+        public async Task<IActionResult> SearchProduct(string param)
+        {
+            return Ok(await _productService.SearchProduct(param));
+        }
+
         [HttpPost(Name = "CreateProduct")]
         public async Task<IActionResult> CreateProduct(ProductDto productDto)
         {
@@ -38,7 +46,7 @@ namespace OrderManagementApp.Controllers
             return Ok(productDto);
         }
 
-        [HttpDelete("id", Name = "DeleteProduct")]
+        [HttpDelete("{id}", Name = "DeleteProduct")]
         public async Task<IActionResult> DeleteProduct(int id)
         {
             await _productService.DeleteProduct(id);

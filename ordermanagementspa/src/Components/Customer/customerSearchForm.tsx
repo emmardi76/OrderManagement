@@ -7,7 +7,13 @@ import { Button, Container, Icon, TextField } from "@mui/material";
 import { Close, ArrowBack, Search } from "@mui/icons-material";
 import CustomerSearchView from "./customerSearchView";
 
-const CustomerSearchForm = (): JSX.Element => {
+export interface CustomerSearchFormProps {
+  onClose?: (customer?: Customer) => void;
+}
+
+const CustomerSearchForm = ({
+  onClose,
+}: CustomerSearchFormProps): JSX.Element => {
   const [search, setSearch] = useState<CustomerQuery | undefined>();
   const navigate = useNavigate();
 
@@ -23,6 +29,11 @@ const CustomerSearchForm = (): JSX.Element => {
     handleSearch();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const [selectedCustomer, setSelectedCustomer] = useState<Customer>();
+  const onSelectCustomer = (customer: Customer) => {
+    setSelectedCustomer(customer);
+  };
 
   return (
     <Container>
@@ -89,7 +100,11 @@ const CustomerSearchForm = (): JSX.Element => {
             className="searchButton"
             variant="contained"
             onClick={() => {
-              navigate({ pathname: "/HomeView " });
+              if (onClose) {
+                onClose(selectedCustomer);
+              } else {
+                navigate({ pathname: "/HomeView " });
+              }
             }}
           >
             <Icon color="action">
@@ -99,7 +114,11 @@ const CustomerSearchForm = (): JSX.Element => {
           </Button>
         </div>
       </div>
-      <CustomerSearchView customers={customers}></CustomerSearchView>
+      <CustomerSearchView
+        customers={customers}
+        onSelect={onSelectCustomer}
+        handleSearch={handleSearch}
+      ></CustomerSearchView>
     </Container>
   );
 };

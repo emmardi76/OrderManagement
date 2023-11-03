@@ -27,8 +27,6 @@ const LoginForm = ({ hideHeader }: LoginFormProps): JSX.Element => {
         setToken && setToken(token);
         setUserId && setUserId(decodedValue.sub);
         handleLogin(decodedValue.sub, token);
-        //setUserId && setUserId(decodedValue.UserId);
-        //handleLogin(decodedValue.UserId, token);
         hideHeader && hideHeader(false);
         navigate({ pathname: "/homeview" });
       } else {
@@ -41,7 +39,6 @@ const LoginForm = ({ hideHeader }: LoginFormProps): JSX.Element => {
     setUser({
       ...user,
       [e.target.name]: e.target.value,
-      //e.target.name === "password" ? sha1(e.target.value) : e.target.value,
     });
   };
 

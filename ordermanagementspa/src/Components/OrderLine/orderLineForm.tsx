@@ -1,8 +1,18 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { OrderLine } from "../../Models/OrderLine";
-import { Box, Button, Container, TextField } from "@mui/material";
+import {
+  Button,
+  Container,
+  Icon,
+  InputAdornment,
+  TextField,
+} from "@mui/material";
 import { addOrderLine, updateOrderLine } from "../Services/orderLineServices";
 import { AxiosResponse } from "axios";
+import { Search } from "@mui/icons-material";
+import { Product } from "../../Models/Product";
+import { getProducts, searchProduct } from "../Services/productServices";
+import ProductSearchFormDialog from "../Product/productSearchFormDialog";
 
 interface OrderLineFormProps {
   onClose: () => void;
@@ -37,6 +47,21 @@ const OrderLineForm = ({
     }
   };
 
+  const [currentProducts, setCurrentProducts] = useState<Product[]>([]);
+
+  useEffect(() => {
+    if (editOrderLine.productId) {
+      getProducts({ id: editOrderLine.productId }).then((result) => {
+        if (result.status === 200) {
+          const products: Product[] = result.data;
+          setCurrentProducts(products);
+        }
+      });
+    } else {
+      setCurrentProducts([]);
+    }
+  }, [editOrderLine.productId]);
+
   const handleChange = (e: { target: { name: string; value: string } }) => {
     if (editOrderLine) {
       setOrderLine({
@@ -45,66 +70,59 @@ const OrderLineForm = ({
       });
     }
   };
+
+  const [inputValue, setInputValue] = useState<string>("");
+
+  const getProductsFronName = (name: string) => {
+    searchProduct(name).then((result) => {
+      if (result.status === 200) {
+        const products: Product[] = result.data;
+        setCurrentProducts(products);
+      }
+    });
+  };
+
+  const handleSearchProduct = () => {
+    setOpenProductSearchForm(true);
+  };
+
+  const [openProductSearchForm, setOpenProductSearchForm] = useState(false);
+  const handleCloseProductSearchForm = (product?: Product) => {
+    setOpenProductSearchForm(false);
+    if (product) {
+      editOrderLine.productId = product.id;
+      editOrderLine.name = product.name;
+      editOrderLine.taxTypeId = product.taxTypeId;
+      editOrderLine.unitPrice = product.unitPrice;
+      if (product.taxPercentage) {
+        editOrderLine.taxPercentage = product.taxPercentage;
+      }
+    }
+  };
+
   return (
     <Container sx={{ width: "100%" }}>
       <form>
         <div className="formFields">
           <div className="formFieldPanel">
             <TextField
-              className="formField"
-              label="OrderId"
               focused
-              type="number"
-              name="orderId"
-              value={editOrderLine?.orderId}
-              onChange={(e) => {
-                const value = parseFloat(e.target.value);
-                if (isNaN(value)) {
-                  setOrderLine({
-                    ...editOrderLine,
-                    orderId: 0,
-                  });
-                } else {
-                  setOrderLine({
-                    ...editOrderLine,
-                    orderId: parseFloat(e.target.value),
-                  });
-                }
-              }}
-              placeholder="Write the OrderId of orderLine"
-            />
-            <TextField
               className="formField"
-              label="ProductId"
-              focused
-              type="number"
-              name="productId"
-              value={editOrderLine?.productId}
-              onChange={(e) => {
-                const value = parseFloat(e.target.value);
-                if (isNaN(value)) {
-                  setOrderLine({
-                    ...editOrderLine,
-                    productId: 0,
-                  });
-                } else {
-                  setOrderLine({
-                    ...editOrderLine,
-                    productId: parseFloat(e.target.value),
-                  });
-                }
-              }}
-              placeholder="Write the OrderId of orderLine"
-            />
-            <TextField
-              className="formField"
-              label="Name"
-              focused
-              type="name"
-              name="name"
+              label="Product Name"
+              type="text"
+              name="productName"
               value={editOrderLine?.name}
               onChange={(e) => handleChange(e)}
-              placeholder="Write the name of orderLine"
+              placeholder="Write the product name of the orderLine"
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="end">
+                    <Icon color="action" onClick={handleSearchProduct}>
+                      <Search />
+                    </Icon>
+                  </InputAdornment>
+                ),
+              }}
             />
             <TextField
               className="formField"
@@ -131,31 +149,8 @@ const OrderLineForm = ({
             />
             <TextField
               className="formField"
-              label="TaxTypeId"
-              focused
-              type="number"
-              name="taxTypeId"
-              value={editOrderLine?.taxTypeId}
-              onChange={(e) => {
-                const value = parseFloat(e.target.value);
-                if (isNaN(value)) {
-                  setOrderLine({
-                    ...editOrderLine,
-                    taxTypeId: 0,
-                  });
-                } else {
-                  setOrderLine({
-                    ...editOrderLine,
-                    taxTypeId: parseFloat(e.target.value),
-                  });
-                }
-              }}
-              placeholder="Write the taxTypeId of orderLine"
-            />
-            <TextField
-              className="formField"
               label="TaxPercentage"
-              focused
+              disabled
               type="number"
               name="taxPercentage"
               value={editOrderLine?.taxPercentage}
@@ -198,75 +193,6 @@ const OrderLineForm = ({
               }}
               placeholder="Write the unitPrice of orderLine"
             />
-            <TextField
-              className="formField"
-              label="TotalWithoutTaxes"
-              disabled
-              type="number"
-              name="totalWithoutTaxes"
-              value={editOrderLine?.totalWithoutTaxes}
-              onChange={(e) => {
-                const value = parseFloat(e.target.value);
-                if (isNaN(value)) {
-                  setOrderLine({
-                    ...editOrderLine,
-                    totalWithoutTaxes: 0,
-                  });
-                } else {
-                  setOrderLine({
-                    ...editOrderLine,
-                    totalWithoutTaxes: parseFloat(e.target.value),
-                  });
-                }
-              }}
-              placeholder="Write the TotalWithoutTaxes of orderLine"
-            />
-            <TextField
-              className="formField"
-              label="Total"
-              disabled
-              type="number"
-              name="total"
-              value={editOrderLine?.total}
-              onChange={(e) => {
-                const value = parseFloat(e.target.value);
-                if (isNaN(value)) {
-                  setOrderLine({
-                    ...editOrderLine,
-                    total: 0,
-                  });
-                } else {
-                  setOrderLine({
-                    ...editOrderLine,
-                    total: parseFloat(e.target.value),
-                  });
-                }
-              }}
-              placeholder="Write the total of orderLine"
-            />
-            <TextField
-              className="formField"
-              label="TotalTaxes"
-              disabled
-              type="number"
-              name="totalTaxes"
-              value={editOrderLine?.totalTaxes}
-              onChange={(e) => {
-                const value = parseFloat(e.target.value);
-                if (isNaN(value)) {
-                  setOrderLine({
-                    ...editOrderLine,
-                    totalTaxes: 0,
-                  });
-                } else {
-                  setOrderLine({
-                    ...editOrderLine,
-                    totalTaxes: parseFloat(e.target.value),
-                  });
-                }
-              }}
-              placeholder="Write the totalTaxes of orderLine"
-            />
           </div>
           <div className="formButtonsPanel">
             <Button
@@ -289,6 +215,10 @@ const OrderLineForm = ({
             </Button>
           </div>
         </div>
+        <ProductSearchFormDialog
+          open={openProductSearchForm}
+          onClose={handleCloseProductSearchForm}
+        ></ProductSearchFormDialog>
       </form>
     </Container>
   );

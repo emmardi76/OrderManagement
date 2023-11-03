@@ -20,19 +20,13 @@ const CustomerAddressSearchView = ({
   const [currentCustomerAddress, setCurrentCustomerAddress] =
     useState<CustomerAddress>();
   const columns: GridColDef<CustomerAddress>[] = [
-    {
-      field: `id`,
-      headerName: `ID`,
-      width: 70,
-    },
-    { field: `customerId`, headerName: `CUSTOMERID`, width: 5 },
-    { field: `description`, headerName: `DESCRIPTION`, width: 125 },
-    { field: `street`, headerName: `STREET`, width: 200 },
-    { field: `streetNumber`, headerName: `NUMBER`, width: 84 },
-    { field: `door`, headerName: `DOOR`, width: 64 },
-    { field: `zipCode`, headerName: `ZIP`, width: 64 },
-    { field: `city`, headerName: `CITY`, width: 100 },
-    { field: `country`, headerName: `COUNTRY`, width: 100 },
+    { field: `description`, headerName: `Description`, width: 125 },
+    { field: `street`, headerName: `Street`, width: 200 },
+    { field: `streetNumber`, headerName: `Number`, width: 84 },
+    { field: `door`, headerName: `Door`, width: 64 },
+    { field: `zipCode`, headerName: `Zip`, width: 64 },
+    { field: `city`, headerName: `City`, width: 100 },
+    { field: `country`, headerName: `Country`, width: 100 },
     {
       field: "action",
       headerName: "",
@@ -52,7 +46,6 @@ const CustomerAddressSearchView = ({
             if (result.status === 200) {
               onClose && onClose();
             } else {
-              console.log("result", result);
               alert(result.data);
             }
           });

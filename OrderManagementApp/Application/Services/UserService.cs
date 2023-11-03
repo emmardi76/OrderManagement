@@ -123,7 +123,7 @@ namespace OrderManagementApp.Application.Services
             return _mapper.Map<UserDto>(user);
         }
 
-        public async Task<UserDto> UpdateUser(UserDto userDto)
+        public async Task<UserDto> UpdateUser(RegisterUserDto userDto)
         {
             var user = await _userRepository.GetUserById(userDto.Id);
             if (user is null) 
@@ -131,6 +131,8 @@ namespace OrderManagementApp.Application.Services
                 throw new InvalidOperationException($"The user with id {userDto.Id} does not exist.");
             }
             _mapper.Map(userDto, user);
+            var hashedPassword = new PasswordHasher<User>().HashPassword(null, userDto.Password);
+            user.PasswordHash = hashedPassword;
             await _userRepository.Save();
 
             return _mapper.Map<UserDto>(user);

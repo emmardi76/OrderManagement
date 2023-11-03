@@ -8,6 +8,8 @@ import ProductFormDialog from "./productFormDialog";
 
 interface ProductSearchViewProps {
   products: Product[];
+  onSelect?: (product: Product) => void;
+  handleSearch: () => Promise<void>;
 }
 
 let defaultProduct: Product = {
@@ -20,21 +22,18 @@ let defaultProduct: Product = {
 
 const ProductSearchView = ({
   products,
+  onSelect,
+  handleSearch,
 }: ProductSearchViewProps): JSX.Element => {
   const [currentProduct, setCurrentProduct] = useState<Product>();
   const columns: GridColDef<Product>[] = [
-    {
-      field: `id`,
-      headerName: `ID`,
-      width: 70,
-    },
-    { field: `name`, headerName: `NAME`, width: 200 },
-    { field: `description`, headerName: `DESCRIPTION`, width: 200 },
-    { field: `taxTypeId`, headerName: `TAXTYPEID`, width: 160 },
-    { field: `unitPrice`, headerName: `UNITPRICE`, width: 160 },
+    { field: `name`, headerName: `Name`, width: 200 },
+    { field: `description`, headerName: `Description`, width: 200 },
+    { field: `taxPercentage`, headerName: `TaxPercentage`, width: 160 },
+    { field: `unitPrice`, headerName: `UnitPrice`, width: 160 },
     {
       field: "action",
-      headerName: "Action",
+      headerName: "",
       sortable: false,
       width: 180,
 
@@ -44,9 +43,10 @@ const ProductSearchView = ({
           setCurrentProduct(currentRow);
         };
 
-        const onClickDelete = () => {
+        const onClickDelete = async () => {
           const currentRow = params.row;
-          return deleteProduct(currentRow.id);
+          await deleteProduct(currentRow.id);
+          handleSearch();
         };
 
         return (
@@ -84,6 +84,7 @@ const ProductSearchView = ({
   const handleClose = () => {
     setOpenProductForm(false);
     setCurrentProduct(undefined);
+    handleSearch();
   };
 
   return (
@@ -114,6 +115,15 @@ const ProductSearchView = ({
           },
         }}
         pageSizeOptions={[5, 10]}
+        onRowSelectionModelChange={(newRowSelectionModel) => {
+          if (newRowSelectionModel.length > 0) {
+            const id = newRowSelectionModel[0];
+            const selectedRowData = products.filter(
+              (product) => product.id.toString() === id.toString()
+            );
+            onSelect && onSelect(selectedRowData[0]);
+          }
+        }}
       ></DataGrid>
 
       <ProductFormDialog

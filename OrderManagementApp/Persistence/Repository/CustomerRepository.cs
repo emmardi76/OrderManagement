@@ -1,10 +1,7 @@
-﻿using AutoMapper.QueryableExtensions;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using OrderManagementApp.Application.Dtos;
 using OrderManagementApp.Domain.Entities;
 using OrderManagementApp.Domain.Interfaces;
-using System.Linq;
-using System.Runtime.CompilerServices;
 
 namespace OrderManagementApp.Persistence.Repository
 {
@@ -23,9 +20,8 @@ namespace OrderManagementApp.Persistence.Repository
             return customer;
         }
 
-        public async void DeleteCustomerById(int id)
-        {
-            Customer customer =  await GetCustomerById(id);
+        public void DeleteCustomer(Customer customer)
+        {            
             _orderContext.Customers.Remove(customer);          
         }
 

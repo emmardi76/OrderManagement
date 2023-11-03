@@ -64,7 +64,6 @@ export const TaxTypeSearchForm = (): JSX.Element => {
             className="searchButton"
             variant="contained"
             onClick={() => {
-              // navigate({ pathname: `/taxType/searchTaxTypeView/${search}` });
               handleSearch();
             }}
           >

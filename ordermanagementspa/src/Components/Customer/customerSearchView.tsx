@@ -3,11 +3,13 @@ import { Customer } from "../../Models/Customer";
 import { deleteCustomer } from "../Services/customerServices";
 import { Stack, Button, Icon, Box } from "@mui/material";
 import { Add } from "@mui/icons-material";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { DataGrid, GridColDef, GridRowSelectionModel } from "@mui/x-data-grid";
 import CustomerFormDialog from "./customerFormDialog";
 
 interface CustomerSearchViewProps {
   customers: Customer[];
+  onSelect?: (customer: Customer) => void;
+  handleSearch: () => Promise<void>;
 }
 
 let defaultCustomer: Customer = {
@@ -20,21 +22,18 @@ let defaultCustomer: Customer = {
 
 const CustomerSearchView = ({
   customers,
+  onSelect,
+  handleSearch,
 }: CustomerSearchViewProps): JSX.Element => {
   const [currentCustomer, setCurrentCustomer] = useState<Customer>();
   const columns: GridColDef<Customer>[] = [
-    {
-      field: `id`,
-      headerName: `ID`,
-      width: 70,
-    },
-    { field: `firstName`, headerName: `FIRSTNAME`, width: 200 },
-    { field: `lastName`, headerName: `LASTNAME`, width: 200 },
-    { field: `email`, headerName: `EMAIL`, width: 200 },
-    { field: `phoneNumber`, headerName: `PHONENUMBER`, width: 200 },
+    { field: `firstName`, headerName: `First Name`, width: 200 },
+    { field: `lastName`, headerName: `Last Name`, width: 200 },
+    { field: `email`, headerName: `Email`, width: 200 },
+    { field: `phoneNumber`, headerName: `Phone Number`, width: 200 },
     {
       field: "action",
-      headerName: "Action",
+      headerName: "",
       sortable: false,
       width: 180,
 
@@ -44,9 +43,10 @@ const CustomerSearchView = ({
           setCurrentCustomer(currentRow);
         };
 
-        const onClickDelete = () => {
+        const onClickDelete = async () => {
           const currentRow = params.row;
-          return deleteCustomer(currentRow.id);
+          await deleteCustomer(currentRow.id);
+          handleSearch();
         };
 
         return (
@@ -84,7 +84,10 @@ const CustomerSearchView = ({
   const handleClose = () => {
     setOpenCustomerForm(false);
     setCurrentCustomer(undefined);
+    handleSearch();
   };
+
+  const [selectedCustomer, setSelectedCustomer] = useState<Customer>();
 
   return (
     <div className="searchView">
@@ -114,6 +117,15 @@ const CustomerSearchView = ({
           },
         }}
         pageSizeOptions={[5, 10]}
+        onRowSelectionModelChange={(newRowSelectionModel) => {
+          if (newRowSelectionModel.length > 0) {
+            const id = newRowSelectionModel[0];
+            const selectedRowData = customers.filter(
+              (customer) => customer.id.toString() === id.toString()
+            );
+            onSelect && onSelect(selectedRowData[0]);
+          }
+        }}
       ></DataGrid>
 
       <CustomerFormDialog

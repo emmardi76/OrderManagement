@@ -1,6 +1,6 @@
 ﻿namespace OrderManagementApp.Application.Dtos
 {
-    public class OrderDto
+    public class OrderUpdateDto
     {
         public int Id { get; set; }
         public int CustomerId { get; set; }
@@ -9,8 +9,5 @@
         public DateTime Date { get; set; }
         public string? OrderNumber { get; set; }
         public string? Remarks { get; set; }
-        public decimal TotalWithoutTaxes { get; set; }
-        public decimal Total { get; set; }
-        public decimal TotalTaxes { get; set; }        
     }
 }

@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace OrderManagementApp.Application.Dtos
+﻿namespace OrderManagementApp.Application.Dtos
 {
     public class OrderQueryDto
     {
         public int? Id { get; set; }
         public int? CustomerId { get; set; }
         public int? CustomerAddressId { get; set; }
+        public string? CustomerName { get; set; }
         public DateTime? Date { get; set; }
         public string? OrderNumber { get; set; }
         public string? Remarks { get; set; }        

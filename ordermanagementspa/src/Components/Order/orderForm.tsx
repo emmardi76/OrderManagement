@@ -1,8 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { Order } from "../../Models/Order";
 import { AxiosResponse } from "axios";
-import { addOrder, updateOrder } from "../Services/orderServices";
-import { Autocomplete, Box, Button, Container, TextField } from "@mui/material";
+import { addOrder, getOrder, updateOrder } from "../Services/orderServices";
+import {
+  Autocomplete,
+  Button,
+  Container,
+  Icon,
+  InputAdornment,
+  TextField,
+} from "@mui/material";
 import OrderLineSearchView from "../OrderLine/orderLineSearchView";
 import { OrderLine } from "../../Models/OrderLine";
 import { OrderLineQuery } from "../../Models/OrderLineQuery";
@@ -12,28 +19,37 @@ import { CustomerAddress } from "../../Models/CustomerAddress";
 import { getCustomerAddresses } from "../Services/customerAddressServices";
 import { Customer } from "../../Models/Customer";
 import { getCustomers, searchCustomer } from "../Services/customerServices";
+import { Search } from "@mui/icons-material";
+import CustomerSearchFormDialog from "../Customer/customerSearchFormDialog";
+import { OrderUpdate } from "../../Models/OrderUpdate";
 
 interface OrderFormProps {
   onClose: () => void;
   order: Order;
 }
 
+const defaultCustomerAddress = {
+  id: 0,
+  customerId: 0,
+  description: "",
+  street: "",
+  streetNumber: "",
+  door: "",
+  zipCode: "",
+  city: "",
+  country: "",
+};
+
 const OrderForm = ({ order, onClose }: OrderFormProps): JSX.Element => {
-  const [editOrder, setOrder] = useState<Order>(order);
+  const [editOrder, setEditOrder] = useState<Order>(order);
   const [msg, setMsg] = useState("");
   const [currentCustomerAddresses, setCurrentCustomerAddresses] = useState<
     CustomerAddress[]
-  >([]);
+  >([defaultCustomerAddress]);
 
   const [currentCustomerAddress, setCurrentCustomerAddress] = useState<
     CustomerAddress | undefined
-  >(undefined);
-
-  const [currentCustomers, setCurrentCustomers] = useState<Customer[]>([]);
-
-  const [currentCustomer, setCurrentCustomer] = useState<Customer | undefined>(
-    undefined
-  );
+  >();
 
   useEffect(() => {
     if (editOrder.customerId) {
@@ -41,19 +57,13 @@ const OrderForm = ({ order, onClose }: OrderFormProps): JSX.Element => {
         (result) => {
           if (result.status === 200) {
             const addresses: CustomerAddress[] = result.data;
+            addresses.push(defaultCustomerAddress);
             setCurrentCustomerAddresses(addresses);
           }
         }
       );
-      getCustomers({ id: editOrder.customerId }).then((result) => {
-        if (result.status === 200) {
-          const customers: Customer[] = result.data;
-          setCurrentCustomers(customers);
-        }
-      });
     } else {
-      setCurrentCustomerAddresses([]);
-      //setCurrentCustomers([]);
+      setCurrentCustomerAddresses([defaultCustomerAddress]);
     }
   }, [editOrder.customerId]);
 
@@ -64,28 +74,9 @@ const OrderForm = ({ order, onClose }: OrderFormProps): JSX.Element => {
       );
       setCurrentCustomerAddress(currentAddress);
     } else {
-      setCurrentCustomerAddress(undefined);
+      setCurrentCustomerAddress(defaultCustomerAddress);
     }
   }, [currentCustomerAddresses, editOrder.customerAddressId]);
-
-  useEffect(() => {
-    console.log("currentCustomerAddress", currentCustomerAddress);
-  }, [currentCustomerAddress]);
-
-  useEffect(() => {
-    if (editOrder.customerId && currentCustomers.length > 0) {
-      const currentCustomer = currentCustomers.find(
-        (c) => c.id === editOrder.customerId
-      );
-      setCurrentCustomer(currentCustomer);
-    } else {
-      setCurrentCustomer(undefined);
-    }
-  }, [currentCustomers, editOrder.customerId]);
-
-  useEffect(() => {
-    console.log("currentCustomer", currentCustomer);
-  }, [currentCustomer]);
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
@@ -97,31 +88,33 @@ const OrderForm = ({ order, onClose }: OrderFormProps): JSX.Element => {
         result = await addOrder(editOrder);
       } else {
         // Change.
-        result = await updateOrder(editOrder);
+        const orderUpdate: OrderUpdate = editOrder;
+        result = await updateOrder(orderUpdate);
       }
 
       if (result.status === 200) {
         setMsg("The operation is success.");
-        alert(msg);
-        onClose();
+        if (editOrder.id > 0) {
+          onClose();
+        } else {
+          setEditOrder(result.data);
+        }
       } else {
         setMsg("The operation isn´t success, try again.");
-        alert(msg);
       }
     }
   };
 
   const handleChange = (e: { target: { name: string; value: string } }) => {
-    console.log("editOrder", editOrder);
     if (editOrder) {
-      setOrder({
+      setEditOrder({
         ...editOrder,
         [e.target.name]: e.target.value,
       });
     }
   };
 
-  const [orderLines, setOrderLines] = useState<OrderLine[]>([]);
+  const [orderLines, setEditOrderLines] = useState<OrderLine[]>([]);
 
   const refreshOrderLines = () => {
     const orderLineQuery: OrderLineQuery = {
@@ -129,7 +122,21 @@ const OrderForm = ({ order, onClose }: OrderFormProps): JSX.Element => {
     };
     getOrderLines(orderLineQuery).then((result) => {
       if (result.status === 200) {
-        setOrderLines(result.data);
+        setEditOrderLines(result.data);
+      }
+    });
+
+    getOrder(editOrder.id).then((result) => {
+      if (result.status === 200) {
+        const freshOrder = result.data;
+        if (freshOrder) {
+          setEditOrder({
+            ...editOrder,
+            total: freshOrder.total,
+            totalTaxes: freshOrder.totalTaxes,
+            totalWithoutTaxes: freshOrder.totalWithoutTaxes,
+          });
+        }
       }
     });
   };
@@ -143,15 +150,17 @@ const OrderForm = ({ order, onClose }: OrderFormProps): JSX.Element => {
     refreshOrderLines();
   };
 
-  const [inputValue, setInputValue] = useState<string>("");
+  const handleSearchCustomer = () => {
+    setOpenCustomerSearchForm(true);
+  };
 
-  const getCustomersFromName = (name: string) => {
-    searchCustomer(name).then((result) => {
-      if (result.status === 200) {
-        const customers: Customer[] = result.data;
-        setCurrentCustomers(customers);
-      }
-    });
+  const [openCustomerSearchForm, setOpenCustomerSearchForm] = useState(false);
+  const handleCloseCustomerSearchForm = (customer?: Customer) => {
+    setOpenCustomerSearchForm(false);
+    if (customer) {
+      editOrder.customerId = customer.id;
+      editOrder.customerName = customer.firstName + " " + customer.lastName;
+    }
   };
 
   return (
@@ -159,118 +168,57 @@ const OrderForm = ({ order, onClose }: OrderFormProps): JSX.Element => {
       <form onSubmit={handleSubmit}>
         <div className="formFields">
           <div className="formFieldPanel">
-            {/*<TextField
-            // label="CustomerId"
+            <TextField
               focused
-              type="number"
-              name="customerId"
-              value={editOrder?.customerId}
-              onChange={(e) => {
-                const value = parseFloat(e.target.value);
-                if (isNaN(value)) {
-                  setOrder({
-                    ...editOrder,
-                    customerId: 0,
-                  });
-                } else {
-                  setOrder({
-                    ...editOrder,
-                    customerId: parseFloat(e.target.value),
-                  });
-                }
+              className="formField"
+              fullWidth
+              label="Customer"
+              type="text"
+              name="customer"
+              value={editOrder?.customerName}
+              placeholder="Please use the search button to select one"
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="end">
+                    <Icon color="action" onClick={handleSearchCustomer}>
+                      <Search />
+                    </Icon>
+                  </InputAdornment>
+                ),
               }}
-              placeholder="Write the customerId of order"
-              //style={{ width: 100 }}
-            /> 
-            <br />
-            <br />*/}
-            <Autocomplete
-              options={currentCustomers}
-              defaultValue={currentCustomer}
-              onInputChange={(e, value) => {
-                //console.log("value", value);
-                getCustomersFromName(value);
-              }}
-              onChange={(event: any, newValue: Customer | null) => {
-                if (newValue) {
-                  setOrder({
-                    ...editOrder,
-                    customerId: newValue?.id,
-                  });
-                } else {
-                  setCurrentCustomer(undefined);
-                }
-              }}
-              getOptionLabel={(option: Customer) =>
-                `${option.id}, ${option.firstName}, ${option.lastName}`
-              }
-              renderInput={(params) => (
-                <TextField
-                  className="formField"
-                  focused
-                  {...params}
-                  label="Customer"
-                  placeholder={
-                    currentCustomer
-                      ? `${currentCustomer.id}, ${currentCustomer.firstName}, ${currentCustomer.lastName}`
-                      : "Please, select a customer"
-                  }
-                />
-              )}
             />
-            {/*<TextField
-              label="CustomerAddressId"
-              focused
-              type="number"
-              name="customerAddressId"
-              value={editOrder?.customerAddressId}
-              onChange={(e) => {
-                const value = parseFloat(e.target.value);
-                if (isNaN(value)) {
-                  setOrder({
-                    ...editOrder,
-                    customerAddressId: 0,
-                  });
-                } else {
-                  setOrder({
-                    ...editOrder,
-                    customerAddressId: parseFloat(e.target.value),
-                  });
-                }
-              }}
-              placeholder="Write the customerAddressId of order"
-              style={{ width: 200 }}
-            />*/}
+
             <Autocomplete
               options={currentCustomerAddresses}
-              defaultValue={currentCustomerAddress}
+              value={currentCustomerAddress ?? defaultCustomerAddress}
               onChange={(event: any, newValue: CustomerAddress | null) => {
                 if (newValue) {
-                  setOrder({
+                  setEditOrder({
                     ...editOrder,
                     customerAddressId: newValue?.id,
                   });
                 } else {
-                  setCurrentCustomerAddress(undefined);
+                  setCurrentCustomerAddress(defaultCustomerAddress);
                 }
               }}
-              getOptionLabel={(option: CustomerAddress) =>
-                `${option.street}, ${option.streetNumber}, ${option.zipCode}`
-              }
+              getOptionLabel={(option: CustomerAddress) => {
+                if (option.id === 0) {
+                  return "";
+                } else {
+                  return `${option.street}, ${option.streetNumber}, ${option.zipCode}`;
+                }
+              }}
               renderInput={(params) => (
                 <TextField
                   className="formField"
                   focused
                   {...params}
                   label="Customer Address"
-                  placeholder={
-                    currentCustomerAddress
-                      ? `${currentCustomerAddress.street}, ${currentCustomerAddress.streetNumber}, ${currentCustomerAddress.zipCode}`
-                      : "Please, select an address"
-                  }
+                  placeholder="Please, select an address"
                 />
               )}
             />
+
             <TextField
               className="formField"
               label="Date"
@@ -280,7 +228,7 @@ const OrderForm = ({ order, onClose }: OrderFormProps): JSX.Element => {
               value={dateToAnsiDate(editOrder?.date)}
               onChange={(e) => {
                 if (e) {
-                  setOrder({
+                  setEditOrder({
                     ...editOrder,
                     date: e.target.value
                       ? new Date(e.target.value)
@@ -294,25 +242,16 @@ const OrderForm = ({ order, onClose }: OrderFormProps): JSX.Element => {
               className="formField"
               label="OrderNumber"
               focused
-              type="number"
               name="orderNumber"
-              variant="standard"
               value={editOrder?.orderNumber}
               onChange={(e) => {
-                const value = parseFloat(e.target.value);
-                if (isNaN(value)) {
-                  setOrder({
-                    ...editOrder,
-                    orderNumber: 0,
-                  });
-                } else {
-                  setOrder({
-                    ...editOrder,
-                    orderNumber: parseFloat(e.target.value),
-                  });
-                }
+                setEditOrder({
+                  ...editOrder,
+                  orderNumber: e.target.value,
+                });
               }}
               placeholder="Write the orderNumber of order"
+              inputProps={{ maxLength: 10, type: "string" }}
             />
             <TextField
               className="formField"
@@ -334,12 +273,12 @@ const OrderForm = ({ order, onClose }: OrderFormProps): JSX.Element => {
               onChange={(e) => {
                 const value = parseFloat(e.target.value);
                 if (isNaN(value)) {
-                  setOrder({
+                  setEditOrder({
                     ...editOrder,
                     totalWithoutTaxes: 0,
                   });
                 } else {
-                  setOrder({
+                  setEditOrder({
                     ...editOrder,
                     totalWithoutTaxes: parseFloat(e.target.value),
                   });
@@ -357,12 +296,12 @@ const OrderForm = ({ order, onClose }: OrderFormProps): JSX.Element => {
               onChange={(e) => {
                 const value = parseFloat(e.target.value);
                 if (isNaN(value)) {
-                  setOrder({
+                  setEditOrder({
                     ...editOrder,
                     total: 0,
                   });
                 } else {
-                  setOrder({
+                  setEditOrder({
                     ...editOrder,
                     total: parseFloat(e.target.value),
                   });
@@ -380,12 +319,12 @@ const OrderForm = ({ order, onClose }: OrderFormProps): JSX.Element => {
               onChange={(e) => {
                 const value = parseFloat(e.target.value);
                 if (isNaN(value)) {
-                  setOrder({
+                  setEditOrder({
                     ...editOrder,
                     totalTaxes: 0,
                   });
                 } else {
-                  setOrder({
+                  setEditOrder({
                     ...editOrder,
                     totalTaxes: parseFloat(e.target.value),
                   });
@@ -416,13 +355,18 @@ const OrderForm = ({ order, onClose }: OrderFormProps): JSX.Element => {
         </div>
 
         {/*grid of order lines*/}
-        {order && (
+        {editOrder && editOrder.id > 0 && (
           <OrderLineSearchView
             orderId={editOrder.id}
             orderLines={orderLines}
             onClose={onCloseOrderLineDialog}
           ></OrderLineSearchView>
         )}
+
+        <CustomerSearchFormDialog
+          open={openCustomerSearchForm}
+          onClose={handleCloseCustomerSearchForm}
+        ></CustomerSearchFormDialog>
       </form>
     </Container>
   );

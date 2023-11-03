@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { OrderQuery } from "../../Models/OrderQuery";
 import { useNavigate } from "react-router-dom";
-import { Order } from "../../Models/Order";
 import { getOrders } from "../Services/orderServices";
 import { Button, Container, Icon, TextField } from "@mui/material";
 import { ArrowBack, Close, Search } from "@mui/icons-material";
 import OrderSearchView from "./orderSearchView";
 import { dateToAnsiDate } from "../../Utils/utils";
+import { OrderList } from "../../Models/OrderList";
 
 const OrderSearchForm = (): JSX.Element => {
   const [search, setSearch] = useState<OrderQuery | undefined>();
   const navigate = useNavigate();
 
-  const [orders, setOrders] = useState<Order[]>([]);
+  const [orders, setOrders] = useState<OrderList[]>([]);
 
   const handleSearch = async () => {
     const { data: orders } = await getOrders(search);
@@ -31,91 +31,47 @@ const OrderSearchForm = (): JSX.Element => {
         <div className="searchFieldPanel">
           <TextField
             className="searchField"
-            name="customerId"
-            type="number"
-            value={search?.customerId ?? ""}
+            type="text"
+            name="customerName"
+            value={search?.customerName ?? ""}
             onChange={(e) => {
-              const value = parseFloat(e.target.value);
-              if (isNaN(value)) {
-                setSearch({
-                  ...search,
-                  customerId: 0,
-                });
-              } else {
-                setSearch({
-                  ...search,
-                  customerId: parseFloat(e.target.value),
-                });
-              }
+              setSearch({
+                ...search,
+                customerName: e.target.value,
+              });
             }}
-            placeholder="Search by customerId of order"
-          />
-          <TextField
-            className="searchField"
-            name="customerAddressId"
-            type="number"
-            value={search?.customerAddressId ?? ""}
-            onChange={(e) => {
-              const value = parseFloat(e.target.value);
-              if (isNaN(value)) {
-                setSearch({
-                  ...search,
-                  customerAddressId: 0,
-                });
-              } else {
-                setSearch({
-                  ...search,
-                  customerAddressId: parseFloat(e.target.value),
-                });
-              }
-            }}
-            placeholder="Search by customerAddressId of order"
+            placeholder="Search by customer name of order"
           />
           <TextField
             className="searchField"
             name="date"
             type="Date"
-            variant="standard"
-            margin="dense"
             value={dateToAnsiDate(search?.date)}
             onChange={(e) => {
               if (e) {
                 setSearch({
                   ...search,
-                  date: e.target.value ? new Date(e.target.value) : new Date(),
+                  date: e.target.value
+                    ? new Date(e.target.value).toDateString()
+                    : new Date().toDateString(),
                 });
               }
             }}
-            placeholder="Write the date of order"
+            placeholder="search by date of order"
             // eslint-disable-next-line react/jsx-no-comment-textnodes
           />
           <TextField
             className="searchField"
             name="orderNumber"
-            type="number"
+            type="text"
             value={search?.orderNumber ?? ""}
             onChange={(e) => {
-              const value = parseFloat(e.target.value);
-              if (isNaN(value)) {
-                setSearch({
-                  ...search,
-                  orderNumber: 0,
-                });
-              } else {
-                setSearch({
-                  ...search,
-                  orderNumber: parseFloat(e.target.value),
-                });
-              }
+              setSearch({
+                ...search,
+                orderNumber: e.target.value,
+              });
             }}
-            placeholder="Search by customerId of order"
-          />
-          <TextField
-            className="searchField"
-            name="remarks"
-            value={search?.remarks ?? ""}
-            onChange={(e) => setSearch({ ...search, remarks: e.target.value })}
-            placeholder="Search by remarks of order"
+            placeholder="Search by order number"
           />
           <TextField
             className="searchField"
@@ -127,7 +83,7 @@ const OrderSearchForm = (): JSX.Element => {
               if (isNaN(value)) {
                 setSearch({
                   ...search,
-                  total: 0,
+                  total: undefined,
                 });
               } else {
                 setSearch({
@@ -136,27 +92,7 @@ const OrderSearchForm = (): JSX.Element => {
                 });
               }
             }}
-            placeholder="Search by Total of order"
-          />
-          <TextField
-            className="searchField"
-            name="totalTaxes"
-            value={search?.totalTaxes ?? ""}
-            onChange={(e) => {
-              const value = parseFloat(e.target.value);
-              if (isNaN(value)) {
-                setSearch({
-                  ...search,
-                  totalTaxes: 0,
-                });
-              } else {
-                setSearch({
-                  ...search,
-                  totalTaxes: parseFloat(e.target.value),
-                });
-              }
-            }}
-            placeholder="Search by totalTaxes of order"
+            placeholder="Search by total of order"
           />
         </div>
         <div className="searchButtonsPanel">
@@ -197,7 +133,10 @@ const OrderSearchForm = (): JSX.Element => {
           </Button>
         </div>
       </div>
-      <OrderSearchView orders={orders}></OrderSearchView>
+      <OrderSearchView
+        handleSearch={handleSearch}
+        orders={orders}
+      ></OrderSearchView>
     </Container>
   );
 };

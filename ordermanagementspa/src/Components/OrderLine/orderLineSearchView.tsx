@@ -20,24 +20,20 @@ const OrderLineSearchView = ({
   useState<OrderLine>();
 
   const columns: GridColDef<OrderLine>[] = [
+    { field: `name`, headerName: `Product Name`, width: 200 },
+    { field: `quantity`, headerName: `Quantity`, width: 100 },
+    { field: `taxPercentage`, headerName: `Tax Percentage`, width: 130 },
+    { field: `unitPrice`, headerName: `UnitPrice`, width: 80 },
     {
-      field: `id`,
-      headerName: `ID`,
-      width: 70,
+      field: `totalWithoutTaxes`,
+      headerName: `Tax Base`,
+      width: 150,
     },
-    { field: `orderId`, headerName: `ORDERID`, width: 200 },
-    { field: `productId`, headerName: `PRODUCTID`, width: 200 },
-    { field: `name`, headerName: `NAME`, width: 500 },
-    { field: `quantity`, headerName: `QUANTITY`, width: 200 },
-    { field: `taxTypeId`, headerName: `TAXTYPEID`, width: 200 },
-    { field: `taxPercentage`, headerName: `TAXPERCENTAGE`, width: 200 },
-    { field: `unitPrice`, headerName: `UNITPRICE`, width: 200 },
-    { field: `totalWithoutTaxes`, headerName: `TOTALWITHOUTTAXES`, width: 200 },
-    { field: `total`, headerName: `TOTAL`, width: 200 },
-    { field: `totalTaxes`, headerName: `TOTALTAXES`, width: 200 },
+    { field: `totalTaxes`, headerName: `Taxes`, width: 100 },
+    { field: `total`, headerName: `Total`, width: 100 },
     {
       field: "action",
-      headerName: "Action",
+      headerName: "",
       sortable: false,
       width: 180,
 
@@ -54,7 +50,6 @@ const OrderLineSearchView = ({
             if (result.status === 200) {
               onClose && onClose();
             } else {
-              console.log("result", result);
               alert(result.data);
             }
           });
@@ -89,7 +84,7 @@ const OrderLineSearchView = ({
     orderId: orderId,
     productId: 0,
     name: "",
-    quantity: 0,
+    quantity: 1,
     taxTypeId: 0,
     taxPercentage: 0,
     unitPrice: 0,
@@ -114,7 +109,7 @@ const OrderLineSearchView = ({
 
   return (
     <div className="searchView">
-      <span className="searchViewTitle">Results of the search order Line</span>
+      <span className="searchViewTitle">Order Lines</span>
       <Button
         className="searchViewAddButton"
         variant="contained"

@@ -35,17 +35,18 @@ const CustomerForm = ({
 
       if (result.status === 200) {
         setMsg("The operation is success.");
-        alert(msg);
-        onClose();
+        if (editCustomer.id > 0) {
+          onClose();
+        } else {
+          setCustomer(result.data);
+        }
       } else {
         setMsg("The operation isn´t success, try again.");
-        alert(msg);
       }
     }
   };
 
   const handleChange = (e: { target: { name: string; value: string } }) => {
-    console.log("editCustomer", editCustomer);
     if (editCustomer) {
       setCustomer({
         ...editCustomer,
@@ -87,19 +88,15 @@ const CustomerForm = ({
               className="formField"
               label="FirstName"
               focused
-              type="firstName"
-              name="firsttName"
+              name="firstName"
               value={editCustomer?.firstName}
-              onChange={(e: { target: { name: string; value: string } }) =>
-                handleChange(e)
-              }
+              onChange={(e) => handleChange(e)}
               placeholder="Write the firstname of customer"
             />
             <TextField
               className="formField"
               label="LastName"
               focused
-              type="lastName"
               name="lastName"
               value={editCustomer?.lastName}
               onChange={(e) => handleChange(e)}
@@ -148,7 +145,7 @@ const CustomerForm = ({
         </div>
 
         {/*grid de customer addrees*/}
-        {customer && (
+        {editCustomer && editCustomer.id > 0 && (
           <CustomerAddressSearchView
             customerId={editCustomer.id}
             customerAddresses={customerAddresses}

@@ -18,6 +18,7 @@ namespace OrderManagementApp.Domain.Interfaces
         Task<bool> Save();
 
         Task<TaxType> GetTaxTypeForProductByProductId(int Id);
+        Task<ICollection<Product>> SearchProduct(string? param);
         //Task<ICollection<OrderLine>> GetProductInOrderLines(int Id);
     }
 }

@@ -9,5 +9,6 @@ namespace OrderManagementApp.Application.Services.ServiceInterfaces
         Task<ProductDto> CreateProduct(ProductDto productDto);
         Task<ProductDto> UpdateProduct(ProductDto productDto);
         Task DeleteProduct(int id);
+        Task<ICollection<ProductDto>> SearchProduct(string param);
     }
 }

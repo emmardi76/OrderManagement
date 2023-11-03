@@ -1,4 +1,4 @@
-export interface Order {
+export interface OrderUpdate {
   id: number;
   customerId: number;
   customerAddressId: number;
@@ -6,7 +6,4 @@ export interface Order {
   date: Date;
   orderNumber: string;
   remarks: string;
-  totalWithoutTaxes: number;
-  total: number;
-  totalTaxes: number;
 }

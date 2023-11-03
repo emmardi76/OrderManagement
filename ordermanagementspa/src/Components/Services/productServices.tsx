@@ -18,6 +18,12 @@ export function getProducts(
   return service.get(url);
 }
 
+export function searchProduct(
+  search?: string
+): Promise<AxiosResponse<Product[]>> {
+  return service.get("Product/searchProduct/" + search);
+}
+
 export function addProduct(product: Product): Promise<AxiosResponse<Product>> {
   return axios.post("Product", product);
 }

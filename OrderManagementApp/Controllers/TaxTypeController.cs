@@ -38,7 +38,7 @@ namespace OrderManagementApp.Controllers
             return Ok(taxesDto);
         }
 
-        [HttpDelete("id", Name = "DeleteTax")]
+        [HttpDelete("{id}", Name = "DeleteTax")]
         public async Task<IActionResult> DeleteTax(int id)
         {
             await _taxTypeService.DeleteTax(id);

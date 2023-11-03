@@ -3,6 +3,7 @@ using OrderManagementApp.Application.Dtos;
 using OrderManagementApp.Application.Services.ServiceInterfaces;
 using OrderManagementApp.Domain.Entities;
 using OrderManagementApp.Domain.Interfaces;
+using OrderManagementApp.Persistence.Repository;
 
 namespace OrderManagementApp.Application.Services
 {
@@ -59,6 +60,13 @@ namespace OrderManagementApp.Application.Services
             var itemProduct = await _productRepository.GetProductById(id);           
 
             return _mapper.Map<ProductDto>(itemProduct);
+        }
+
+        public async Task<ICollection<ProductDto>> SearchProduct(string param)
+        {
+            var product = await _productRepository.SearchProduct(param);
+
+            return _mapper.Map<ICollection<ProductDto>>(product);
         }
 
         public async Task<ProductDto> UpdateProduct(ProductDto productDto)

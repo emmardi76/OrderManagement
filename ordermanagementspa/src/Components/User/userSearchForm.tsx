@@ -104,7 +104,10 @@ export const UserSearchForm = (): JSX.Element => {
           </Button>
         </div>
       </div>
-      <UserSearchView users={users}></UserSearchView>
+      <UserSearchView
+        users={users}
+        handleSearch={handleSearch}
+      ></UserSearchView>
     </Container>
   );
 };

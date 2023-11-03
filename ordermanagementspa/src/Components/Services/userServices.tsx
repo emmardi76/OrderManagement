@@ -36,7 +36,7 @@ export function getUsers(search?: UserQuery): Promise<AxiosResponse<User[]>> {
   return service.get(url);
 }
 
-export function updateUser(user: User): Promise<AxiosResponse<User>> {
+export function updateUser(user: RegisterUser): Promise<AxiosResponse<User>> {
   return axios.put("User", user);
 }
 

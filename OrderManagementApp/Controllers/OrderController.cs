@@ -22,12 +22,18 @@ namespace OrderManagementApp.Controllers
             _orderService = orderService;
         }
 
-        [AllowAnonymous]
         [HttpGet("GetOrders")]
         public async Task<IActionResult> GetOrders([FromQuery] OrderQueryDto orderQueryDto)
         {
             return Ok(await _orderService.GetOrders(orderQueryDto));
         }
+
+        [HttpGet("GetOrder/{id}")]
+        public async Task<ActionResult<OrderDto>> GetOrder(int id)
+        {
+            return Ok(await _orderService.GetOrder(id));
+        }
+
 
         [HttpPost(Name = "CreateOrder")]
         public async Task<IActionResult> CreateOrder(OrderDto orderDto)
@@ -37,13 +43,13 @@ namespace OrderManagementApp.Controllers
 
         [AllowAnonymous]
         [HttpPut(Name = "UpdateOrder")]
-        public async Task<IActionResult> UpdateOrder([FromBody] OrderDto orderDto)
+        public async Task<IActionResult> UpdateOrder([FromBody] OrderUpdateDto orderDto)
         {
             return Ok(await _orderService.UpdateOrder(orderDto));
         }
 
         [AllowAnonymous]
-        [HttpDelete("id", Name = "DeleteOrder")]
+        [HttpDelete("{id}", Name = "DeleteOrder")]
         public async Task<IActionResult> DeleteOrder(int id)
         { 
             await _orderService.DeleteOrder(id);

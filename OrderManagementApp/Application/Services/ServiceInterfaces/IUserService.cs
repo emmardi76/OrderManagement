@@ -10,7 +10,7 @@ namespace OrderManagementApp.Application.Services.ServiceInterfaces
         Task<ICollection<UserDto>> GetUsers(UserQueryDto userQueryDto);
         Task<UserDto?> GetUserById(int id);
         Task<UserDto?> GetUserByEmail(string email);
-        Task<UserDto> UpdateUser(UserDto userDto);
+        Task<UserDto> UpdateUser(RegisterUserDto userDto);
         Task DeleteUser(int id);
     }
 }

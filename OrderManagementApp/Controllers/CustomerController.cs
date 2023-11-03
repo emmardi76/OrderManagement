@@ -47,7 +47,7 @@ namespace OrderManagementApp.Controllers
         }
 
         [AllowAnonymous]
-        [HttpDelete("id", Name = "DeleteCustomer")]
+        [HttpDelete("{id}", Name = "DeleteCustomer")]
         public async Task<IActionResult> DeleteCustomer(int id)
         {
             await _customerService.DeleteCustomer(id);

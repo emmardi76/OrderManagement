@@ -4,7 +4,7 @@ import { updateUser } from "../Services/userServices";
 import axios, { AxiosResponse } from "axios";
 import { RegisterUser } from "../../Models/RegisterUser";
 import { useNavigate } from "react-router-dom";
-import { Button, Container, Icon, TextField } from "@mui/material";
+import { Button, Container, TextField } from "@mui/material";
 
 interface UserFormProps {
   onClose: () => void;
@@ -12,7 +12,7 @@ interface UserFormProps {
 }
 
 const UserForm = ({ onClose, user }: UserFormProps): JSX.Element => {
-  const [editUser, setUser] = useState<User>(user);
+  const [editUser, setUser] = useState<RegisterUser>({ ...user, password: "" });
   const [msg, setMsg] = useState("");
 
   const navigate = useNavigate();
@@ -24,7 +24,7 @@ const UserForm = ({ onClose, user }: UserFormProps): JSX.Element => {
     let resultRegister: AxiosResponse<RegisterUser> | undefined = undefined;
     if (editUser) {
       if (editUser.id === 0) {
-        // Create.//Send to register
+        // Create.Send to register
         setMsg("The user doesn´t exist.You must register");
         navigate({ pathname: "/register" });
         resultRegister = await axios.post("User/RegisterUser", user);
@@ -44,7 +44,6 @@ const UserForm = ({ onClose, user }: UserFormProps): JSX.Element => {
   };
 
   const handleChange = (e: { target: { name: string; value: string } }) => {
-    console.log("editUser", editUser);
     if (editUser) {
       setUser({
         ...editUser,
@@ -64,6 +63,7 @@ const UserForm = ({ onClose, user }: UserFormProps): JSX.Element => {
               focused
               type="firstName"
               name="firstName"
+              value={editUser.firstName}
               onChange={(e) => handleChange(e)}
               required
               placeholder="Write your firstname"
@@ -74,6 +74,7 @@ const UserForm = ({ onClose, user }: UserFormProps): JSX.Element => {
               focused
               type="lastName"
               name="lastName"
+              value={editUser.lastName}
               onChange={(e) => handleChange(e)}
               required
               placeholder="Write your lastname"
@@ -84,6 +85,7 @@ const UserForm = ({ onClose, user }: UserFormProps): JSX.Element => {
               focused
               type="email"
               name="email"
+              value={editUser.email}
               onChange={(e) => handleChange(e)}
               required
               placeholder="Write your email"
@@ -94,6 +96,7 @@ const UserForm = ({ onClose, user }: UserFormProps): JSX.Element => {
               focused
               type="phonenumber"
               name="phoneNumber"
+              value={editUser.phoneNumber}
               onChange={(e) => handleChange(e)}
               required
               placeholder="Write your phonenumber"
@@ -105,6 +108,7 @@ const UserForm = ({ onClose, user }: UserFormProps): JSX.Element => {
               name="password"
               type="password"
               required
+              value={editUser.password}
               onChange={(e) => handleChange(e)}
               placeholder="Write your password"
             />

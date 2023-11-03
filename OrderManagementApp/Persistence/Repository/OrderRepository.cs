@@ -33,7 +33,10 @@ namespace OrderManagementApp.Persistence.Repository
 
         public async Task<Order?> GetOrderById(int id)
         {
-            return await _orderContext.Orders.FirstOrDefaultAsync(o => o.Id == id);
+            return await _orderContext
+                                .Orders
+                                .Include(o => o.Customer)
+                                .FirstOrDefaultAsync(o => o.Id == id);
         }
 
         public async Task<Order?> GetOrderWithLinesByOrderId(int id)
@@ -51,7 +54,9 @@ namespace OrderManagementApp.Persistence.Repository
 
         public async Task<ICollection<Order>> GetOrders(OrderQueryDto? orderQueryDto = null)
         {
-            var orders = _orderContext.Orders.AsQueryable<Order>();
+            var orders = _orderContext
+                                .Orders
+                                .AsQueryable<Order>();                                ;
 
             if (orderQueryDto != null)
             {
@@ -70,14 +75,21 @@ namespace OrderManagementApp.Persistence.Repository
                     orders = orders.Where(o => o.CustomerAddressId == orderQueryDto.CustomerAddressId.Value);
                 }
 
+                if (!string.IsNullOrWhiteSpace(orderQueryDto.CustomerName))
+                {
+                    orders = orders.Where(o => o.Customer != null && (o.Customer.FirstName+ " "+ o.Customer.LastName).Contains(orderQueryDto.CustomerName));
+                }
+
                 if (orderQueryDto.Date.HasValue)
                 {
-                    orders = orders.Where(o => o.Date == orderQueryDto.Date.Value);
+                    var fromDate = orderQueryDto.Date.Value.Date;
+                    var toDate = fromDate.AddDays(1);
+                    orders = orders.Where(o => o.Date >= fromDate && o.Date < toDate);
                 }
 
                 if (orderQueryDto.OrderNumber is not null)
                 {
-                    orders = orders.Where(o => o.OrderNumber != null && orderQueryDto.OrderNumber.Contains(orderQueryDto.OrderNumber));
+                    orders = orders.Where(o => o.OrderNumber != null && o.OrderNumber.Contains(orderQueryDto.OrderNumber));
                 }
 
                 if (orderQueryDto.Remarks is not null)
@@ -96,7 +108,7 @@ namespace OrderManagementApp.Persistence.Repository
                 }
             }
 
-            return await orders.OrderBy(o => o.Id).ToListAsync();
+            return await orders.Include(o => o.Customer).OrderBy(o => o.Id).ToListAsync();
         }
 
         public async Task<bool> Save()
