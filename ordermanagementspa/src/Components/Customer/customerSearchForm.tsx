@@ -37,6 +37,7 @@ const CustomerSearchForm = ({
 
   return (
     <Container>
+      <span className="searchFormTitle">Customer</span>
       <div className="searchFields">
         <div className="searchFieldPanel">
           <TextField

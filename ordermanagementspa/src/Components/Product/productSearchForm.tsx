@@ -38,6 +38,7 @@ export const ProductSearchForm = ({
 
   return (
     <Container>
+      <span className="searchFormTitle">Product</span>
       <div className="searchFields">
         <div className="searchFieldPanel">
           <div>

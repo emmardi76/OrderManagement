@@ -258,5 +258,12 @@ nav ul li:hover a {
 
 .searchViewDataGrid {
   margin: 5px !important;
-  min-height: 60vh !important;
+  min-height: 58vh !important;
+}
+
+.searchFormTitle {
+  padding-top: 10px;
+  margin-left: 5px;
+  float: left;
+  font-weight: bold;
 }

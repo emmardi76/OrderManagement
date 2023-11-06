@@ -28,6 +28,7 @@ export const TaxTypeSearchForm = (): JSX.Element => {
 
   return (
     <Container>
+      <span className="searchFormTitle">Tax Type</span>
       <div className="searchFields">
         <div className="searchFieldPanel">
           <TextField

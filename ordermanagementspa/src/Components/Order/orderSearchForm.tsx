@@ -27,6 +27,7 @@ const OrderSearchForm = (): JSX.Element => {
 
   return (
     <Container>
+      <span className="searchFormTitle">Order</span>
       <div className="searchFields">
         <div className="searchFieldPanel">
           <TextField

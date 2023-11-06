@@ -27,6 +27,7 @@ export const UserSearchForm = (): JSX.Element => {
 
   return (
     <Container>
+      <span className="searchFormTitle">User</span>
       <div className="searchFields">
         <div className="searchFieldPanel">
           <TextField
