@@ -1,9 +1,7 @@
-import { useContext } from "react";
 import { Route, Routes } from "react-router-dom";
 import RegisterForm from "../Register/registerForm";
 import LoginForm from "../Login/loginForm";
 import HomeView from "../Home/homeView";
-import { LoginContext } from "../Context/loginContext";
 import { TaxTypeSearchForm } from "../TaxType/taxTypeSearchForm";
 import { ProductSearchForm } from "../Product/productSearchForm";
 import CustomerSearchForm from "../Customer/customerSearchForm";
@@ -14,7 +12,6 @@ interface BodyProps {
   hideHeader?: (hide: boolean) => void;
 }
 export const Body = ({ hideHeader }: BodyProps): JSX.Element => {
-  const { userId } = useContext(LoginContext);
   return (
     <>
       <Routes>
