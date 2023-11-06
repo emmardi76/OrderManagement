@@ -17,7 +17,7 @@ export const LoginContext = createContext<LoginContextType>({
   handleLogin: handleLogin,
 });
 
-export const LoginProvider = (props: any) => {
+export const LoginProvider = (props: any): JSX.Element => {
   const [token, setToken] = useState<string>("");
   const [userId, setUserId] = useState<string>("");
 

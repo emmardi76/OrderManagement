@@ -61,7 +61,7 @@ const UserForm = ({ onClose, user }: UserFormProps): JSX.Element => {
               className="formField"
               label="FirstName"
               focused
-              type="firstName"
+              type="text"
               name="firstName"
               value={editUser.firstName}
               onChange={(e) => handleChange(e)}
@@ -72,7 +72,7 @@ const UserForm = ({ onClose, user }: UserFormProps): JSX.Element => {
               className="formField"
               label="LastName"
               focused
-              type="lastName"
+              type="text"
               name="lastName"
               value={editUser.lastName}
               onChange={(e) => handleChange(e)}
@@ -94,7 +94,7 @@ const UserForm = ({ onClose, user }: UserFormProps): JSX.Element => {
               className="formField"
               label="PhoneNumber"
               focused
-              type="phonenumber"
+              type="tel"
               name="phoneNumber"
               value={editUser.phoneNumber}
               onChange={(e) => handleChange(e)}

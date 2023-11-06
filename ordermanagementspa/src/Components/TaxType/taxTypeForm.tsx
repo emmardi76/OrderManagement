@@ -53,7 +53,7 @@ const TaxTypeForm = ({ taxType, onClose }: TaxTypeFormProps): JSX.Element => {
               className="formField"
               label="Name"
               focused
-              type="name"
+              type="text"
               name="name"
               value={editTaxType?.name}
               onChange={(e: { target: { name: string; value: string } }) =>
@@ -66,7 +66,6 @@ const TaxTypeForm = ({ taxType, onClose }: TaxTypeFormProps): JSX.Element => {
               className="formField"
               label="TaxPercentage"
               focused
-              type="taxPercentage"
               name="taxPercentage"
               value={editTaxType?.taxPercentage}
               onChange={(e) => handleChange(e)}

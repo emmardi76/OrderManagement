@@ -59,7 +59,7 @@ const CustomerAddressForm = ({
               className="formField"
               label="Description"
               focused
-              type="description"
+              type="text"
               name="description"
               value={editCustomerAddress?.description}
               onChange={(e: { target: { name: string; value: string } }) =>
@@ -71,7 +71,7 @@ const CustomerAddressForm = ({
               className="formField"
               label="Street"
               focused
-              type="street"
+              type="text"
               name="street"
               value={editCustomerAddress?.street}
               onChange={(e) => handleChange(e)}
@@ -81,7 +81,6 @@ const CustomerAddressForm = ({
               className="formField"
               label="StreetNumber"
               focused
-              type="streetNumber"
               name="streetNumber"
               value={editCustomerAddress?.streetNumber}
               onChange={(e) => handleChange(e)}
@@ -91,7 +90,6 @@ const CustomerAddressForm = ({
               className="formField"
               label="Door"
               focused
-              type="door"
               name="door"
               value={editCustomerAddress?.door}
               onChange={(e) => handleChange(e)}
@@ -101,7 +99,6 @@ const CustomerAddressForm = ({
               className="formField"
               label="ZipCode"
               focused
-              type="zipCode"
               name="zipCode"
               value={editCustomerAddress?.zipCode}
               onChange={(e) => handleChange(e)}
@@ -111,7 +108,6 @@ const CustomerAddressForm = ({
               className="formField"
               label="City"
               focused
-              type="city"
               name="city"
               value={editCustomerAddress?.city}
               onChange={(e) => handleChange(e)}
@@ -121,7 +117,6 @@ const CustomerAddressForm = ({
               className="formField"
               label="Country"
               focused
-              type="country"
               name="country"
               value={editCustomerAddress?.country}
               onChange={(e) => handleChange(e)}

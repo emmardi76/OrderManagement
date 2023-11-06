@@ -88,6 +88,7 @@ const CustomerForm = ({
               className="formField"
               label="FirstName"
               focused
+              type="text"
               name="firstName"
               value={editCustomer?.firstName}
               onChange={(e) => handleChange(e)}
@@ -97,6 +98,7 @@ const CustomerForm = ({
               className="formField"
               label="LastName"
               focused
+              type="text"
               name="lastName"
               value={editCustomer?.lastName}
               onChange={(e) => handleChange(e)}
@@ -116,7 +118,7 @@ const CustomerForm = ({
               className="formField"
               label="PhoneNumber"
               focused
-              type="phonenumber"
+              type="tel"
               name="phoneNumber"
               value={editCustomer?.phoneNumber}
               onChange={(e) => handleChange(e)}

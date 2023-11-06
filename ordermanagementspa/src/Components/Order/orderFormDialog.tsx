@@ -2,7 +2,7 @@ import { Order } from "../../Models/Order";
 import { Dialog, DialogTitle, DialogContent } from "@mui/material";
 import OrderForm from "./orderForm";
 
-interface OrderFprmsProps {
+interface OrderFormsProps {
   open: boolean;
   onClose: () => void;
   order: Order;
@@ -12,7 +12,7 @@ const OrderFormDialog = ({
   order,
   open,
   onClose,
-}: OrderFprmsProps): JSX.Element => {
+}: OrderFormsProps): JSX.Element => {
   const handleClose = () => {
     onClose();
   };

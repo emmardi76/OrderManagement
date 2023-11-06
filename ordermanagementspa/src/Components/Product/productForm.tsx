@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Product } from "../../Models/Product";
-import { Button, Container, MenuItem, Select, TextField } from "@mui/material";
+import { Button, Container, MenuItem, TextField } from "@mui/material";
 import { AxiosResponse } from "axios";
 import { addProduct, updateProduct } from "../Services/productServices";
 import { TaxType } from "../../Models/TaxType";
@@ -66,7 +66,7 @@ const ProductForm = ({ product, onClose }: ProductFormProps): JSX.Element => {
               className="formField"
               label="Name"
               focused
-              type="name"
+              type="text"
               name="name"
               value={editProduct?.name}
               onChange={(e: { target: { name: string; value: string } }) =>
@@ -79,7 +79,7 @@ const ProductForm = ({ product, onClose }: ProductFormProps): JSX.Element => {
               className="formField"
               label="Description"
               focused
-              type="description"
+              type="text"
               name="description"
               value={editProduct?.description}
               onChange={(e) => handleChange(e)}
@@ -110,7 +110,7 @@ const ProductForm = ({ product, onClose }: ProductFormProps): JSX.Element => {
               className="formField"
               label="UnitPrice"
               focused
-              type="unitPrice"
+              type="number"
               name="unitPrice"
               value={editProduct?.unitPrice}
               onChange={(e) => handleChange(e)}

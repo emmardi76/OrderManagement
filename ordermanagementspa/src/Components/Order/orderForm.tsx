@@ -18,7 +18,6 @@ import { dateToAnsiDate } from "../../Utils/utils";
 import { CustomerAddress } from "../../Models/CustomerAddress";
 import { getCustomerAddresses } from "../Services/customerAddressServices";
 import { Customer } from "../../Models/Customer";
-import { getCustomers, searchCustomer } from "../Services/customerServices";
 import { Search } from "@mui/icons-material";
 import CustomerSearchFormDialog from "../Customer/customerSearchFormDialog";
 import { OrderUpdate } from "../../Models/OrderUpdate";
@@ -257,7 +256,7 @@ const OrderForm = ({ order, onClose }: OrderFormProps): JSX.Element => {
               className="formField"
               label="Remarks"
               focused
-              type="remarks"
+              type="text"
               name="remarks"
               value={editOrder?.remarks}
               onChange={(e) => handleChange(e)}
