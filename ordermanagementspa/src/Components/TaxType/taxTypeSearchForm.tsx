@@ -28,7 +28,7 @@ export const TaxTypeSearchForm = (): JSX.Element => {
 
   return (
     <Container>
-      <span className="searchFormTitle">Tax Type</span>
+      <span className="searchFormTitle">Tax Type Search Form</span>
       <div className="searchFields">
         <div className="searchFieldPanel">
           <TextField

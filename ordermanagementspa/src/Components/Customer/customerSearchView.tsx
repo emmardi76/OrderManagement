@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Customer } from "../../Models/Customer";
 import { deleteCustomer } from "../Services/customerServices";
-import { Stack, Button, Icon, Box } from "@mui/material";
+import { Stack, Button, Icon } from "@mui/material";
 import { Add } from "@mui/icons-material";
-import { DataGrid, GridColDef, GridRowSelectionModel } from "@mui/x-data-grid";
+import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import CustomerFormDialog from "./customerFormDialog";
 
 interface CustomerSearchViewProps {
@@ -86,8 +86,6 @@ const CustomerSearchView = ({
     setCurrentCustomer(undefined);
     handleSearch();
   };
-
-  const [selectedCustomer, setSelectedCustomer] = useState<Customer>();
 
   return (
     <div className="searchView">

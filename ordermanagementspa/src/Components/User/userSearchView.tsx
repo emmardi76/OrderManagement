@@ -2,8 +2,7 @@ import React, { useEffect, useState } from "react";
 import { User } from "../../Models/User";
 import UserFormDialog from "./userFormDialog";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import { Button, Icon, Stack } from "@mui/material";
-import { Add } from "@mui/icons-material";
+import { Button, Stack } from "@mui/material";
 import { deleteUser } from "../Services/userServices";
 
 interface UserSearchViewProps {
@@ -87,19 +86,7 @@ const UserSearchView = ({
   return (
     <div className="searchView">
       <span className="searchViewTitle">Results of the search</span>
-      <Button
-        className="searchViewAddButton"
-        variant="contained"
-        color="primary"
-        onClick={() => {
-          setCurrentUser(defaultUser);
-        }}
-      >
-        <Icon color="action">
-          <Add />
-        </Icon>
-        Add
-      </Button>
+
       <div className="cleanFix"></div>
 
       <DataGrid
