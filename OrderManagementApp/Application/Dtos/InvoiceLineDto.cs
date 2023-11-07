@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OrderManagementApp.Domain.Entities
+namespace OrderManagementApp.Application.Dtos
 {
-    public class InvoiceLine
+    public class InvoiceLineDto
     {
         public int Id { get; set; }
         public int InvoiceId { get; set; }
@@ -19,9 +19,5 @@ namespace OrderManagementApp.Domain.Entities
         public decimal TotalWithoutTaxes { get; set; }
         public decimal Total { get; set; }
         public decimal TotalTaxes { get; set; } //check if we want this field here
-
-        public Product? Product { get; set; }
-        public TaxType? TaxType { get; set; }
-        public Invoice? Invoice { get; set; }
     }
 }
