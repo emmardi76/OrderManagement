@@ -98,7 +98,10 @@ export const TaxTypeSearchForm = (): JSX.Element => {
           </Button>
         </div>
       </div>
-      <SearchTaxTypeView taxTypes={taxTypes}></SearchTaxTypeView>
+      <SearchTaxTypeView
+        taxTypes={taxTypes}
+        handleSearch={handleSearch}
+      ></SearchTaxTypeView>
     </Container>
   );
 };

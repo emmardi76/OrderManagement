@@ -1,5 +1,5 @@
 import { TaxType } from "../../Models/TaxType";
-import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
+import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { Button, Icon, Stack } from "@mui/material";
 import { deleteTax } from "../Services/taxTypeServices";
 import { Add } from "@mui/icons-material";
@@ -9,6 +9,7 @@ import TaxTypeFormDialog from "./taxTypeFormDialog";
 interface SearchTaxTypeViewProps {
   taxTypes: TaxType[];
   onCLose?: () => void;
+  handleSearch: () => Promise<void>;
 }
 
 let defaultTaxType: TaxType = {
@@ -20,6 +21,7 @@ let defaultTaxType: TaxType = {
 const SearchTaxTypeView = ({
   taxTypes,
   onCLose,
+  handleSearch,
 }: SearchTaxTypeViewProps): JSX.Element => {
   const [currentTaxType, setCurrentTaxType] = useState<TaxType>();
   const columns: GridColDef<TaxType>[] = [
@@ -46,6 +48,7 @@ const SearchTaxTypeView = ({
             } else {
               alert(result.data);
             }
+            handleSearch();
           });
         };
 
@@ -87,6 +90,7 @@ const SearchTaxTypeView = ({
     setOpenTaxTypeForm(false);
     setCurrentTaxType(undefined);
     onCLose && onCLose();
+    handleSearch();
   };
 
   return (

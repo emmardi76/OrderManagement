@@ -133,7 +133,7 @@ nav {
 
 nav ul {
   list-style: none;
-  overflow: hidden; /* Limpiamos errores de float */
+  overflow: hidden; /* Clean float error */
 }
 
 nav ul li {
@@ -145,7 +145,7 @@ nav ul li {
 }
 
 nav ul li a {
-  display: block; /* Convertimos los elementos a en elementos bloque para manipular el padding */
+  display: block; /* Convert the elements to elements block for manage padding */
   padding: 20px;
   color: #5b867c;
   text-decoration: none;
