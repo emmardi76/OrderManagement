@@ -8,5 +8,6 @@
 
         public ICollection<Product>? Product { get; set; }
         public ICollection<OrderLine>? OrderLines { get; init; } = new HashSet<OrderLine>();
+        public ICollection<InvoiceLine> InvoiceLines { get; init; } = new List<InvoiceLine>();
     }
 }

@@ -16,5 +16,6 @@ namespace OrderManagementApp.Domain.Entities
 
         public TaxType?  TaxType { get; set;}
         public ICollection<OrderLine> OrderLines { get; init; } = new List<OrderLine>();
+        public ICollection<InvoiceLine> InvoiceLines { get; init; } = new List<InvoiceLine>();
     }
 }

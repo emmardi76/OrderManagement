@@ -21,5 +21,6 @@ namespace OrderManagementApp.Domain.Entities
 
         public Customer? Customer { get; set; }
         public ICollection<Order>? Orders { get; init; } = new List<Order>();
+        public ICollection<Invoice>? Invoices { get; init; } = new List<Invoice>();
     }
 }
