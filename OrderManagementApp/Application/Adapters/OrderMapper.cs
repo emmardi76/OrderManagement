@@ -39,7 +39,7 @@ namespace OrderManagementApp.Application.Adapters
                 {
                     dest.CustomerName = source.Customer?.FirstName + " " + source.Customer?.LastName;
                 });
-            CreateMap<OrderLine, OrderLineDto>() .ReverseMap();
+            CreateMap<InvoiceLine, InvoiceLineDto>() .ReverseMap();
             CreateMap<Product, ProductDto>()
                 .AfterMap((source, dest) =>
                 {
