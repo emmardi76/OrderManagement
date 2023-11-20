@@ -2,11 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using OrderManagementApp.Application.Dtos;
 using OrderManagementApp.Application.Services.ServiceInterfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OrderManagementApp.Controllers
 {
