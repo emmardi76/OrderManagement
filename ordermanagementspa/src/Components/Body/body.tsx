@@ -7,6 +7,7 @@ import { ProductSearchForm } from "../Product/productSearchForm";
 import CustomerSearchForm from "../Customer/customerSearchForm";
 import OrderSearchForm from "../Order/orderSearchForm";
 import { UserSearchForm } from "../User/userSearchForm";
+import InvoiceSearchForm from "../Invoice/invoiceSearchForm";
 
 interface BodyProps {
   hideHeader?: (hide: boolean) => void;
@@ -31,6 +32,10 @@ export const Body = ({ hideHeader }: BodyProps): JSX.Element => {
           element={<CustomerSearchForm />}
         />
         <Route path="/Order/orderSearchForm" element={<OrderSearchForm />} />
+        <Route
+          path="/Invoice/invoiceSearchForm"
+          element={<InvoiceSearchForm />}
+        />
         <Route path="/User/userSearchForm" element={<UserSearchForm />} />
       </Routes>
     </>

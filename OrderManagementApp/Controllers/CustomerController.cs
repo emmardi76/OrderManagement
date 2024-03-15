@@ -17,7 +17,7 @@ namespace OrderManagementApp.Controllers
             _customerService = customerService;
         }
 
-        [AllowAnonymous]
+        
         [HttpGet("GetCustomers")]
         public async Task<IActionResult> GetCustomers([FromQuery] CustomerQueryDto customerQueryDto)
         {

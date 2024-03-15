@@ -1,24 +1,25 @@
 import React, { useEffect, useState } from "react";
-import { OrderLine } from "../../Models/OrderLine";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { InvoiceLine } from "../../Models/InvoiceLine";
+import { deleteInvoiceLine } from "../Services/invoiceLineServices";
 import { Button, Icon, Stack } from "@mui/material";
-import { deleteOrderLine } from "../Services/orderLineServices";
 import { Add } from "@mui/icons-material";
-import OrderLineFormDialog from "./orderLineFormDialog";
+import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import InvoiceLineFormDialog from "./invoiceLineFormDialog";
 
-interface OrderLineSearchViewProps {
-  orderId: number;
-  orderLines: OrderLine[];
+interface InvoiceLineSearchViewProps {
+  invoiceId: number;
+  invoiceLines: InvoiceLine[];
   onClose?: () => void;
 }
-const OrderLineSearchView = ({
-  orderId,
-  orderLines,
-  onClose,
-}: OrderLineSearchViewProps): JSX.Element => {
-  const [currentOrderLine, setCurrentOrderLine] = useState<OrderLine>();
 
-  const columns: GridColDef<OrderLine>[] = [
+const InvoiceLineSearchView = ({
+  invoiceId,
+  invoiceLines,
+  onClose,
+}: InvoiceLineSearchViewProps): JSX.Element => {
+  const [currentInvoiceLine, setCurrentInvoiceLine] = useState<InvoiceLine>();
+
+  const columns: GridColDef<InvoiceLine>[] = [
     { field: `name`, headerName: `Product Name`, width: 200 },
     { field: `quantity`, headerName: `Quantity`, width: 100 },
     { field: `taxPercentage`, headerName: `Tax Percentage`, width: 130 },
@@ -39,13 +40,13 @@ const OrderLineSearchView = ({
       renderCell: (params) => {
         const onClickEdit = () => {
           const currentRow = params.row;
-          setCurrentOrderLine(currentRow);
+          setCurrentInvoiceLine(currentRow);
         };
 
         const onClickDelete = () => {
           const currentRow = params.row;
           onClose && onClose();
-          deleteOrderLine(currentRow.id).then((result) => {
+          deleteInvoiceLine(currentRow.id).then((result) => {
             if (result.status === 200) {
               onClose && onClose();
             } else {
@@ -78,9 +79,9 @@ const OrderLineSearchView = ({
     },
   ];
 
-  let defaultOrderLine: OrderLine = {
+  let defaultInvoiceLine: InvoiceLine = {
     id: 0,
-    orderId: orderId,
+    invoiceId: invoiceId,
     productId: 0,
     name: "",
     quantity: 1,
@@ -92,29 +93,30 @@ const OrderLineSearchView = ({
     totalTaxes: 0,
   };
 
-  const [openOrderLineForm, setOpenOrderLineForm] = useState(false);
+  const [openInvoiceLineForm, setOpenInvoiceLineForm] = useState(false);
 
   useEffect(() => {
-    if (currentOrderLine) {
-      setOpenOrderLineForm(true);
+    if (currentInvoiceLine) {
+      setOpenInvoiceLineForm(true);
     }
-  }, [currentOrderLine, setOpenOrderLineForm]);
+  }, [currentInvoiceLine, setOpenInvoiceLineForm]);
 
   const handleClose = () => {
-    setOpenOrderLineForm(false);
-    setCurrentOrderLine(undefined);
+    setOpenInvoiceLineForm(false);
+    setCurrentInvoiceLine(undefined);
     onClose && onClose();
   };
 
   return (
     <div className="searchView">
-      <span className="searchViewTitle">Order Lines</span>
+      <span className="searchViewTitle">Invoice Lines</span>
+
       <Button
         className="searchViewAddButton"
         variant="contained"
         color="primary"
         onClick={() => {
-          setCurrentOrderLine(defaultOrderLine);
+          setCurrentInvoiceLine(defaultInvoiceLine);
         }}
       >
         <Icon color="action">
@@ -126,7 +128,7 @@ const OrderLineSearchView = ({
 
       <DataGrid
         className="searchViewDataGrid"
-        rows={orderLines}
+        rows={invoiceLines}
         columns={columns}
         initialState={{
           pagination: {
@@ -136,13 +138,13 @@ const OrderLineSearchView = ({
         pageSizeOptions={[5, 10]}
       ></DataGrid>
 
-      <OrderLineFormDialog
-        orderLine={currentOrderLine ?? defaultOrderLine}
-        open={openOrderLineForm}
+      <InvoiceLineFormDialog
+        invoiceLine={currentInvoiceLine ?? defaultInvoiceLine}
+        open={openInvoiceLineForm}
         onClose={handleClose}
-      ></OrderLineFormDialog>
+      ></InvoiceLineFormDialog>
     </div>
   );
 };
 
-export default OrderLineSearchView;
+export default InvoiceLineSearchView;

@@ -15,6 +15,11 @@ const MenuBar = (): JSX.Element => {
           </Link>
         </li>
         <li>
+          <Link className="nav-link" to={"/Invoice/invoiceSearchForm"}>
+            Invoice
+          </Link>
+        </li>
+        <li>
           <Link className="nav-link" to={"/Product/productSearchForm"}>
             Product
           </Link>
